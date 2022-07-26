@@ -20,7 +20,7 @@ import Analytics from './Analytics/Analytics';
 function App() {
 
   const [theme, setTheme] = useState("");
-  const [userAgreedToCookies, setUserAgreedToCookies] = useState("");
+  const [userAgreedToCookies, setUserAgreedToCookies] = useState();
 
   useEffect(() => {
     // Set preferences
@@ -32,17 +32,15 @@ function App() {
         setTheme("light")
       }
 
-      if (p.userAgreedToCookies == true || p.userAgreedToCookies == false) {
-        setUserAgreedToCookies(p.userAgreedToCookies)
-      } else {
-        setUserAgreedToCookies(null)
-      }
+      setUserAgreedToCookies(p.userAgreedToCookies)
 
-    } catch {
+
+    } catch (e) {
+      console.debug(e)
+
+      localStorage.setItem('ProFyziky-Preferences', JSON.stringify({ theme: "light", userAgreedToCookies: "unset" }))
       setTheme("light")
-      setUserAgreedToCookies(null)
-
-      localStorage.setItem('ProFyziky-Preferences', JSON.stringify({ theme: "light", userAgreedToCookies: null }))
+      setUserAgreedToCookies("unset")
     }
   }, []);
 
@@ -69,7 +67,7 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem("ProFyziky-Preferences", JSON.stringify({ theme: theme, userAgreedToCookies: userAgreedToCookies }))
+    localStorage.setItem('ProFyziky-Preferences', JSON.stringify({ theme: theme, userAgreedToCookies: userAgreedToCookies }))
   }, [theme, userAgreedToCookies]);
 
 
@@ -81,6 +79,7 @@ function App() {
     }
   }
 
+  console.warn(userAgreedToCookies)
 
 
   return (
@@ -112,8 +111,9 @@ function App() {
 
         </Routes>
 
-        {userAgreedToCookies == null &&
-          <InitialSettings />
+
+        {(userAgreedToCookies == "unset") &&
+          <InitialSettings setUserAgreedToCookies={setUserAgreedToCookies} />
         }
 
       </BrowserRouter>

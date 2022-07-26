@@ -5,7 +5,11 @@ import { Helmet } from "react-helmet";
 
 
 function Protocols() {
-    const [UserName, setUserName] = useState();
+    // const [UserName, setUserName] = useState();
+
+    const [UserFirstName, setUserFirstName] = useState();
+    const [userLastName, setUserLastName] = useState();
+
     const [UserCoworker, setUserCoworker] = useState();
     const [UserSchool, setUserSchool] = useState();
     const [UserClass, setUserClass] = useState();
@@ -14,22 +18,22 @@ function Protocols() {
 
 
     function saveInformation() {
-        console.log({ "Name": UserName, "Coworker": UserCoworker, "School": UserSchool, "Class": UserClass })
-        localStorage.setItem("ProFyziky-UserInfo", JSON.stringify({ "Name": UserName, "Coworker": UserCoworker, "School": UserSchool, "Class": UserClass }))
+        console.log({ "FirstName": UserFirstName, "LastName": userLastName, "School": UserSchool, "Class": UserClass })
+        localStorage.setItem("ProFyziky-UserInfo", JSON.stringify({ "FirstName": UserFirstName, "LastName": userLastName, "Coworker": UserCoworker, "School": UserSchool, "Class": UserClass }))
     }
-
 
     useEffect(() => {
         try {
 
             let info = JSON.parse(localStorage.getItem('ProFyziky-UserInfo'))
-            setUserName(info["Name"])
+            setUserFirstName(info["FirstName"])
+            setUserLastName(info["LastName"])
             setUserClass(info["Class"])
             setUserSchool(info["School"])
             setUserCoworker(info["Coworker"])
         } catch (e) {
 
-            localStorage.setItem('ProFyziky-UserInfo', JSON.stringify({ "Name": "", "Coworker": "", "School": "", "Class": "" }))
+            localStorage.setItem('ProFyziky-UserInfo', JSON.stringify({ "FirstName": "", "LastName": userLastName, "Coworker": "", "School": "", "Class": "" }))
 
         }
     }, []);
@@ -94,11 +98,24 @@ function Protocols() {
             {/* Form */}
             <div className=" uk-tile uk-tile-primary uk-margin">
 
-                <div className="uk-margin">
-                    <label className="uk-form-label" for="form-stacked-text" >Jméno, Příjmení</label>
-                    <div className="uk-form-controls">
-                        <input className="uk-input" id="form-stacked-text" value={UserName} onBlur={() => saveInformation()} onChange={(e) => setUserName(e.target.value)} type="text" placeholder="Evženie Svíčková" />
+                <div className="uk-margin uk-grid ">
+                    <div className="uk-width-1-2" >
+
+                        <label className="uk-form-label" for="form-stacked-text" >Křestní jméno</label>
+                        <div className="uk-form-controls ">
+                            <input className="uk-input" id="form-stacked-text" value={UserFirstName} onBlur={() => saveInformation()} onChange={(e) => setUserFirstName(e.target.value)} type="text" placeholder="Evženie" />
+                        </div>
                     </div>
+
+                    <div className="uk-width-1-2" style={{ paddingLeft: "20px" }}>
+
+                        <label className="uk-form-label" for="form-stacked-text" >Příjmení</label>
+                        <div className="uk-form-controls">
+                            <input className="uk-input" id="form-stacked-text" value={userLastName} onBlur={() => saveInformation()} onChange={(e) => setUserLastName(e.target.value)} type="text" placeholder="Svíčková" />
+                        </div>
+                    </div>
+
+
                 </div>
 
                 <div className="uk-margin">
@@ -113,14 +130,14 @@ function Protocols() {
                     <div className=" uk-width-3-5">
                         <label className="uk-form-label" for="skola">Škola</label>
                         <select className="uk-select" id="skola" value={UserSchool} onChange={(e) => { setUserSchool(e.target.value) }}>
-                            <option disabled="">Vyberte školu</option>
+                            <option disabled>Vyberte školu</option>
                             <option>GymZl</option>
 
                         </select>
                     </div>
 
 
-                    <div className="  uk-width-2-5">
+                    <div className="  uk-width-2-5" style={{ paddingLeft: "20px" }}>
                         <label className="uk-form-label" for="form-stacked-text">Třída, skupina</label>
                         <div className="uk-form-controls">
                             <input className="uk-input" id="form-stacked-text" type="text" placeholder="2A,A" onBlur={() => saveInformation()} value={UserClass} onChange={(e) => setUserClass(e.target.value)} />
@@ -152,24 +169,16 @@ function Protocols() {
             </thead>
             <tbody>
 
-                <tr>
-                    <td>Table Data</td>
-                    <td>Table Data</td>
-                    <td>Table Data</td>
-                    <td><a className="uk-button-default uk-button" >Edit</a></td>
-                </tr>
-                <tr>
-                    <td>Table Data</td>
-                    <td>Table Data</td>
-                    <td>Table Data</td>
-                    <td><button className="uk-button-default uk-button">Edit</button></td>
-                </tr>
-                <tr>
-                    <td>Table Data</td>
-                    <td>Table Data</td>
-                    <td>Table Data</td>
-                    <td><button className="uk-button-default uk-button">Edit</button></td>
-                </tr>
+                {Projects && Projects.map(obj =>
+                    <tr>
+                        <td>{obj.nadpis}</td>
+                        <td>{obj.fileName}</td>
+                        <td>{obj.dateOfCreation}</td>
+                        <td><Link to={"/protocols/" + obj.id} className="uk-button-default uk-button" >Edit</Link></td>
+
+                    </tr>
+                )}
+
 
 
             </tbody>

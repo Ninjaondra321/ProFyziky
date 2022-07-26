@@ -20,7 +20,8 @@ function ProtocolBuilder() {
 
     // Metadata
     const [cisloCviceni, setCisloCviceni] = useState();
-    const [Title, setTitle] = useState();
+    const [fileName, setfileName] = useState();
+
 
     // Section: Hlava
     const [userName, setUserName] = useState();
@@ -41,28 +42,144 @@ function ProtocolBuilder() {
     // Section: Závěr
     const [zaver, setZaver] = useState("");
 
-    const [quillValue, setQuillValue] = useState("");
-    const [quillValue01, setQuillValue01] = useState("");
 
-    const [ActiveSection, setActiveSection] = useState("pomucky");
+    const [ActiveSection, setActiveSection] = useState("hlava");
+
+
 
 
     useEffect(() => {
-
         try {
+            let protocols = JSON.parse(localStorage.getItem('ProFyziky-Protocols'))
+            console.log(protocols)
+            for (let protocol of protocols) {
+                if (protocol.id == projectName) {
+                    setfileName(protocol.fileName)
+
+                    setUserName(protocol.name)
+                    setUserColeague(protocol.coleague)
+                    setUserClass(protocol.class)
+                    setUserDate(protocol.date)
+
+                    setNadNadpis(protocol.nadNadpis)
+                    setNadpis(protocol.nadpis)
+
+                    setPomucky(protocol.pomucky)
+
+                    setHlavniCast(protocol.hlavniCast)
+
+                    setZaver(protocol.zaver)
+
+                    return
+                }
+            }
+
             let userInfo = JSON.parse(localStorage.getItem('ProFyziky-UserInfo'))
 
-            setUserName(userInfo.Name)
-            setUserClass(userInfo.Class)
-            setUserColeague(userInfo.Coworker)
+            console.log(userInfo)
+            console.log(userInfo.FirstName)
+            console.log(userInfo.Class)
+            console.log(userInfo["FirstName"] + userInfo["LastName"])
+
+            let n = askForProtocolNumber()
+
+            let trida = userInfo.Class[0] + userInfo.Class[1]
+
+            let date = new Date;
+            protocols.push({
+                id: projectName,
+                dateOfCreation: "" + date.getDate() + "." + date.getMonth() + "." + date.getFullYear(),
+                fileName: userInfo.LastName.toUpperCase() + "_" + trida + "_LP" + n,
+                name: userInfo.FirstName + " " + userInfo.LastName,
+                coleague: userInfo.Coworker,
+                class: userInfo.Class,
+                date: null,
+                nadNadpis: null,
+                nadpis: null,
+                pomucky: null,
+                hlavniCast: null,
+                zaver: null,
+            })
+
+            localStorage.setItem('ProFyziky-Protocols', JSON.stringify(protocols))
 
 
-        } catch {
-            console.log("problém...")
+
+        } catch (e) {
+            console.error(e)
+
+            let protocols = []
+            let userInfo = JSON.parse(localStorage.getItem('ProFyziky-UserInfo'))
+
+            let n = askForProtocolNumber()
+
+            let trida = userInfo.Class[0] + userInfo.Class[1]
+            console.warn(trida)
+
+            let date = new Date;
+            protocols.push({
+                id: projectName,
+                dateOfCreation: "" + date.getDate() + "." + date.getMonth() + "." + date.getFullYear(),
+                fileName: userInfo.LastName.toUpperCase() + "_" + trida + "_LP" + n,
+                name: userInfo.FirstName + " " + userInfo.LastName,
+                coleague: userInfo.Coworker,
+                class: userInfo.Class,
+                date: null,
+                nadNadpis: null,
+                nadpis: null,
+                pomucky: null,
+                hlavniCast: null,
+                zaver: null,
+            })
+
+            localStorage.setItem('ProFyziky-Protocols', JSON.stringify(protocols))
+
         }
+
     }, []);
 
+    function askForProtocolNumber() {
+        const protocolNumber = prompt('Kolikátá je to laboratorní práce? (viz Cvičení č.___)     PS: Z nějakého důvodu tohle okno vyskakuje dvakrát; odpovězte prosím strjně')
+        console.info(protocolNumber)
+        setCisloCviceni(protocolNumber)
 
+        return protocolNumber
+    }
+
+
+    function save() {
+        let protocols = JSON.parse(localStorage.getItem('ProFyziky-Protocols'))
+        for (let i = 0; i < protocols.length; i++) {
+            const protocol = protocols[i];
+
+            if (protocol.id == projectName) {
+                protocols.splice(i)
+                break
+            }
+        }
+
+        let date = new Date;
+        protocols.push({
+            id: projectName,
+            dateOfCreation: "" + date.getDate() + "." + date.getMonth() + "." + date.getFullYear(),
+            fileName: fileName,
+            name: userName,
+            coleague: userColeague,
+            class: userClass,
+            date: userDate,
+            nadNadpis: nadNadpis,
+            nadpis: nadpis,
+            pomucky: pomucky,
+            hlavniCast: hlavniCast,
+            zaver: zaver,
+        })
+        localStorage.setItem('ProFyziky-Protocols', JSON.stringify(protocols))
+        setIsSaved(true)
+        return
+
+
+
+    }
 
 
 
@@ -70,15 +187,10 @@ function ProtocolBuilder() {
 
 
     useEffect(() => {
-        // let p = JSON.parse(localStorage.getItem('ProFyziky-Protocolos'))
+        setIsSaved(false)
+    }, [fileName, userName, userColeague, userClass, userDate, nadpis, nadNadpis, pomucky, hlavniCast, zaver]);
 
-        // for (let protocol of p) {
-        //     if (protocol.id == projectName) {
 
-        //     }
-        // }
-
-    }, []);
 
 
 
@@ -87,17 +199,25 @@ function ProtocolBuilder() {
     function extendTextFromBadge(variable, setVariable, value) {
         let text = variable
 
-        // If there is a space in the end, remove it
-        if (text[text.length - 1] == " ") {
-            text = text.split(text.length - 1)[0]
-        }
+        if (variable !== null) {
 
-        if (text[text.length - 1] == "." || text.length == 0) {
-            // Capitalize first letter of a value
+
+            // If there is a space in the end, remove it
+            if (text[text.length - 1] == " ") {
+                text = text.split(text.length - 1)[0]
+            }
+
+            if (text[text.length - 1] == "." || text.length == 0) {
+                // Capitalize first letter of a value
+                value = value.charAt(0).toUpperCase() + value.slice(1);
+            }
+
+            setVariable(text + " " + value)
+        } else {
             value = value.charAt(0).toUpperCase() + value.slice(1);
-        }
 
-        setVariable(text + " " + value)
+            setVariable(value)
+        }
 
     }
 
@@ -170,19 +290,20 @@ function ProtocolBuilder() {
             </div>
 
             <div className="center">
-                <input type="text" className="uk-input" style={{ padding: 0 }} defaultValue={Title}
-                    // onBlur={(e) => { saveTitle(e.target.value) }} 
+                <input type="text" className="uk-input" style={{ padding: 0 }} defaultValue={fileName}
+                    onBlur={(e) => { setfileName(e.target.value) }}
                     placeholder="Projekt bez názvu" />
                 <p>.pdf</p>
 
             </div>
             <div className="right">
                 {isSaved &&
-                    <button className="uk-button uk-button-default">Uloženo</button>
+                    <button onClick={() => save()} className="uk-button uk-button-default">Uloženo</button>
+
                 }
                 {!isSaved &&
                     <button
-                        // onClick={() => saveStage()}
+                        onClick={() => save()}
                         className="uk-button uk-button-primary">Uložit</button>
                 }
 
@@ -205,19 +326,19 @@ function ProtocolBuilder() {
                         <div style={{ paddingLeft: "50px", }} >
 
                             <div className="uk-margin">
-                                <label className="uk-form-label" for="form-stacked-text">Pracoval(a)</label>
+                                <label className="uk-form-label" htmlFor="form-stacked-text">Pracoval(a)</label>
                                 <input className="uk-input" type="text" placeholder="Vaše celé jméno" value={userName} onChange={e => setUserName(e.target.value)} />
                             </div>
                             <div className="uk-margin">
-                                <label className="uk-form-label" for="form-stacked-text">Spolupracoval(a)</label>
+                                <label className="uk-form-label" htmlFor="form-stacked-text">Spolupracoval(a)</label>
                                 <input className="uk-input" type="text" placeholder="Jméno vašeho spolupracujícího" value={userColeague} onChange={e => setUserColeague(e.target.value)} />
                             </div>
                             <div className="uk-margin">
-                                <label className="uk-form-label" for="form-stacked-text">Třída, skupina</label>
-                                <input className="uk-input" type="text" placeholder="3A,A" value={userClass} onChange={e => setUserClass(e.target.value)} />
+                                <label className="uk-form-label" htmlFor="form-stacked-text">Třída, skupina</label>
+                                <input className="uk-input" type="text" placeholder="např. 3A,A" value={userClass} onChange={e => setUserClass(e.target.value)} />
                             </div>
                             <div className="uk-margin">
-                                <label className="uk-form-label" for="form-stacked-text">Datum</label>
+                                <label className="uk-form-label" htmlFor="form-stacked-text">Datum</label>
                                 <input className="uk-input" type="date" onChange={e => setUserDate(zpracujDate(e.target.value))} />
                             </div>
                         </div>
@@ -242,7 +363,7 @@ function ProtocolBuilder() {
                         <div style={{ paddingLeft: "50px", }} >
 
                             <div className="uk-margin">
-                                <label className="uk-form-label" for="form-stacked-text">NadNadpis</label>
+                                <label className="uk-form-label" htmlFor="form-stacked-text">NadNadpis</label>
                                 <input className="uk-input" type="text" placeholder="Some text..." value={nadNadpis} onChange={e => setNadNadpis(e.target.value)} />
                                 <div className="uk-margin">
 
@@ -254,7 +375,7 @@ function ProtocolBuilder() {
 
                             </div>
                             <div className="uk-margin">
-                                <label className="uk-form-label" for="form-stacked-text">Nadpis</label>
+                                <label className="uk-form-label" htmlFor="form-stacked-text">Nadpis</label>
                                 <input className="uk-input" type="text" placeholder="Nadpis protokolu" value={nadpis} onChange={e => setNadpis(e.target.value)} />
                             </div>
                         </div>
@@ -291,7 +412,7 @@ function ProtocolBuilder() {
                             </div>
                             <div className="vyber-badges">
                                 <p>Takový ty věci na pokusy:</p>
-                                {["souprava pro tření", "teplá a studená voda", "led", "vozíček s pohonem", "kolejnice", "ocelový kvádr", "ocelový kvádr", "ocelový válec", "letecká guma"].map(value => <p key={value} onClick={() => extendTextFromBadge(pomucky, setPomucky, value + ",")} style={{ background: "#F9A03F" }} className="moje-badge" >{value}</p>)}
+                                {["souprava pro tření", "teplá a studená voda", "led", "vozíček s pohonem", "kolejnice", "ocelový kvádr", "ocelový válec", "letecká guma"].map(value => <p key={value} onClick={() => extendTextFromBadge(pomucky, setPomucky, value + ",")} style={{ background: "#F9A03F" }} className="moje-badge" >{value}</p>)}
                             </div>
                         </div>
                         <div className="uk-padding-small"></div>
@@ -373,15 +494,25 @@ function ProtocolBuilder() {
                                 <textarea className="uk-input" placeholder="Zde napište list věcí, které jste při LP použili" value={zaver} onChange={(e) => setZaver(e.target.value)} />
                             </div>
                             <div className="vyber-badges">
-                                <p>Měřidla:</p>
-                                {["délkové měřidlo", "stopky", "posuvné mikrometrické měřítko", "digitální váha", "mikrometrické měřidlo", "kalorimetr", "teploměr", "váhy", "siloměr", "voltmetr", "ampérmetr"].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} className="moje-badge" >{value}</p>)}
+                                {["Cílem laboratorní práce bylo", "V této laboratorní práci jsme"].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} className="moje-badge" >{value}</p>)}
                             </div>
                             <div className="vyber-badges">
-                                {["voltmetr", "ampérmetr", "žárovka", "motor", "rezistor", "cívka", "dioda", "vodič"].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} style={{ background: "#44AF69" }} className="moje-badge" >{value}</p>)}
+                                {["naučit se", "ověřit", "prokázat", "potvrdit", "určit", "změřit",].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} style={{ background: "#44AF69" }} className="moje-badge" >{value}</p>)}
                             </div>
                             <div className="vyber-badges">
-                                <p>Takový ty věci na pokusy:</p>
-                                {["souprava pro tření", "teplá a studená voda", "led", "vozíček s pohonem", "kolejnice", "ocelový kvádr", "ocelový kvádr", "ocelový válec", "letecká guma"].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} style={{ background: "#F9A03F" }} className="moje-badge" >{value}</p>)}
+                                {["určovali jsme", "měřili jsme", "určovali jsme",].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} style={{ background: "#F9A03F" }} className="moje-badge" >{value}</p>)}
+                            </div>
+                            <div className="vyber-badges">
+                                {["relativní odchylka", "průměrná hodnota", "velikost naměřené hodnoty", "tabulková hodnota"].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} className="moje-badge" >{value}</p>)}
+                            </div>
+                            <div className="vyber-badges">
+                                {["je přímo úměrná", "je podstatně nižší", "je menší ", "je výrazně větší "].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} style={{ background: "#44AF69" }} className="moje-badge" >{value}</p>)}
+                            </div>
+                            <div className="vyber-badges">
+                                {["došli jsme k závěru, že", "což dokazuje ", "tyto hodnoty vypovídají o ",].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} style={{ background: "#F9A03F" }} className="moje-badge" >{value}</p>)}
+                            </div>
+                            <div className="vyber-badges">
+                                {["odchylka byla větší, a to převážně z důvodu ručního měření.", "realativní odchylka se  ", "tyto hodnoty vypovídají o ",].map(value => <p key={value} onClick={() => extendTextFromBadge(zaver, setZaver, value)} className="moje-badge" >{value}</p>)}
                             </div>
 
 
@@ -413,9 +544,90 @@ function ProtocolBuilder() {
                     <div className="uk-animation-slide-left-medium">
 
                         <h1 className="uk-padding-small"> Vzhled</h1>
+
                         <div style={{ paddingLeft: "50px", }} >
+
+                            <div className="uk-margin uk-flex">
+                                <h4>Přednachystané vzhledy&nbsp;&nbsp;</h4>
+                                <div uk-form-custom="target: > * > span:first-child">
+                                    <select>
+                                        <option value="times">Times</option>
+                                        <option value="google">Google</option>
+                                        <option value="microsoft">Microsoft</option>
+                                        <option value="vlastni">Vlastní</option>
+
+                                    </select>
+                                    <button className="uk-button uk-button-default" type="button" tabindex="-1">
+                                        <span></span>
+                                        <span uk-icon="icon: chevron-down"></span>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <h2>Nadpisy</h2>
                             <div className="uk-margin">
-                                <h1>Nadpisy</h1>
+                                <div uk-form-custom="target: > * > span:first-child">
+                                    <label>Font: </label>
+                                    <select>
+                                        <option value="times">Times</option>
+                                        <option value="google">Google</option>
+                                        <option value="microsoft">Microsoft</option>
+                                        <option value="vlastni">Vlastní</option>
+
+                                    </select>
+                                    <button className="uk-button uk-button-default" type="button" tabindex="-1">
+                                        <span></span>
+                                        <span uk-icon="icon: chevron-down"></span>
+                                    </button>
+                                </div>
+
+                                <div className="uk-margin uk-flex">
+                                    <div>
+                                        <input type="radio" id="ahoj" name="textDecoration" value="ahoj" />
+                                        <label htmlFor="ahoj" style={{ textDecoration: "underline" }} >Podtrženo</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="id159" name="textDecoration" value="ahoj" />
+                                        <label htmlFor="id159" style={{ fontWeight: "bold" }} >Sečteno</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="id465645" name="textDecoration" value="ahoj" />
+                                        <label htmlFor="id465645" style={{ fontStyle: "italic" }} >Jarka si vyvařila</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="id7895" name="textDecoration" value="ahoj" />
+                                        <label htmlFor="id7895" >15 bodů</label>
+                                    </div>
+                                </div>
+
+                                <div className="uk-margin">
+                                    <label >Padding</label>
+                                    <div className="uk-margin uk-flex">
+                                        <div className="uk-inline">
+                                            <span className="uk-form-icon" uk-icon="icon: arrow-left"></span>
+                                            <input className="uk-input" type="number" />
+                                        </div>
+                                        <div className="uk-inline">
+                                            <span className="uk-form-icon" uk-icon="icon: arrow-right"></span>
+                                            <input className="uk-input" type="number" />
+                                        </div>
+                                        <div className="uk-inline">
+                                            <span className="uk-form-icon" uk-icon="icon: arrow-up"></span>
+                                            <input className="uk-input" type="number" />
+                                        </div>
+                                        <div className="uk-inline">
+                                            <span className="uk-form-icon" uk-icon="icon: arrow-down"></span>
+                                            <input className="uk-input" type="number" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <h3>Heading 1</h3>
+
+
+
+
 
                             </div>
 
@@ -447,60 +659,54 @@ function ProtocolBuilder() {
 
                     <div className="okno-parent center">
 
-                        <div class="container header">
-                            <div class="logo"><img src={gymzlLogo} alt="Logo se nenačetlo" />
+                        <div className="container header">
+                            <div className="logo"><img src={gymzlLogo} alt="Logo se nenačetlo" />
                             </div>
-                            <div class="pracoval"> <p>Pracoval(a):</p> </div>
-                            <div class="jmeno"><p>{userName}</p> </div>
-                            <div class="kolega"><p>{userColeague}</p> </div>
-                            <div class="spolupracoval"><p>Spolupracoval(a):</p> </div>
-                            <div class="datum"><p>Datum:</p> </div>
-                            <div class="trida-skupina"><p>Třída, skupina:</p> </div>
-                            <div class="datumm"><p>{userDate}</p> </div>
-                            <div class="trida-skupinaa"><p>{userClass}</p> </div>
+                            <div className="pracoval"> <p>Pracoval(a):</p> </div>
+                            <div className="jmeno"><p>{userName}</p> </div>
+                            <div className="kolega"><p>{userColeague}</p> </div>
+                            <div className="spolupracoval"><p>Spolupracoval(a):</p> </div>
+                            <div className="datum"><p>Datum:</p> </div>
+                            <div className="trida-skupina"><p>Třída, skupina:</p> </div>
+                            <div className="datumm"><p>{userDate}</p> </div>
+                            <div className="trida-skupinaa"><p>{userClass}</p> </div>
                         </div>
                         <div className={(ActiveSection != "hlava") && "okno"} onClick={() => setActiveSection('hlava')} ></div>
                     </div>
-                    {/* 
 
                     <div className="okno-parent">
-                        <ReactQuill theme="bubble" value={quillValue} onChange={setQuillValue}
-                        />
-                        <div className={(ActiveSection != "hlava") && "okno"} onClick={() => setActiveSection('hlava')} ></div>
-                    </div> */}
+                        <div><div className="center">
 
-                    <div className="okno-parent">
-                        <div>
-                            <div className="center"><h3>{nadNadpis}</h3></div>
-                            <div className="center"><h1>{nadpis}</h1></div>
+                            {nadNadpis ?
+                                <h3>{nadNadpis}</h3>
+                                :
+                                <h3 style={{ color: "#999999" }}>Cvičení č.__</h3>
+                            }
+                        </div>
+                            <div className="center">
+                                {nadpis ?
+                                    <h1>{nadpis}</h1>
+                                    :
+                                    <h1 style={{ color: "#999999" }}>Nadpis</h1>
+                                }
+                            </div>
                         </div>
 
                         <div className={(ActiveSection != "nadpis") && "okno"} onClick={() => setActiveSection('nadpis')} ></div>
                     </div>
 
-
-                    {/* <div className="okno-parent">
-                        <ReactQuill theme="bubble" defaultValue={quillValue} onChange={setQuillValue}
-                            modules={
-                                {
-                                    toolbar: [
-                                        [{ 'header': [1, 2, false] }],
-                                        [{ "align": ['right', 'center', 'right', 'justify'] }],
-                                        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-                                        ['link', 'image'],
-                                        ['clean']
-                                    ],
-                                }}
-
-                        />
-                        <div className={(ActiveSection != "nadpis") && "okno"} onClick={() => setActiveSection('nadpis')} ></div>
-
-                    </div> */}
 
                     <div className="okno-parent">
                         <div>
                             <h2>Pomůcky</h2>
-                            <p>{pomucky}</p>
+                            {pomucky ?
+                                <p>{pomucky}</p>
+                                :
+                                <p style={{ color: "#999999" }}>
+                                    Vývar z hladových opic, kuřecí řízek z mladého býčka, kyselina pentahydrogenfluorovodíková, medvědí česnek
+                                </p>
+                            }
+
                         </div>
                         <div className={(ActiveSection != "pomucky") && "okno"} onClick={() => setActiveSection('pomucky')} ></div>
 
@@ -508,7 +714,15 @@ function ProtocolBuilder() {
 
                     <div className="okno-parent">
                         {/* <ReactQuill theme="bubble" value={hlavniCast} onChange={setQuillValue01} /> */}
-                        <div className="content" dangerouslySetInnerHTML={{ __html: hlavniCast }}></div>
+                        {hlavniCast ?
+                            <div className="content" dangerouslySetInnerHTML={{ __html: hlavniCast }}></div>
+                            :
+                            <div style={{ color: "#999999" }}>
+                                <h2>Nadpis</h2>
+                                <p>Text</p>
+                            </div>
+
+                        }
 
 
                         <div className={(ActiveSection != "hlavni-cast") && "okno"} onClick={() => setActiveSection('hlavni-cast')} ></div>
@@ -524,20 +738,6 @@ function ProtocolBuilder() {
                         <div className={(ActiveSection != "zaver") && "okno"} onClick={() => setActiveSection('zaver')} ></div>
 
                     </div>
-
-                    {/* <div className="test">
-                        <ReactQuill defaultValue={PakVymazz} onChange={setPakVymazz}>
-                            <div className="my-editing-area" />
-                        </ReactQuill>
-
-
-                    </div> */}
-
-                    {/* 
-
-                    <ReactQuill className="moje-rich-text-editor A4" theme="bubble" value={quillValue} onChange={(e) => setQuillValue(e)}
-
-                    /> */}
 
 
 
