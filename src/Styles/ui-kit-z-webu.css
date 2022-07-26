@@ -11606,6 +11606,7 @@ textarea {
     height: 60px !important;
 }
 
+
 .quill>.ql-toolbar:first-child {
     display: none !important;
 }
@@ -11616,4 +11617,9 @@ textarea {
     bottom: 15px;
     left: 15px;
     right: 15px;
+}
+
+.ql-tooltip {
+    background-color: white !important;
+    z-index: 999999;
 }

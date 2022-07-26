@@ -78,8 +78,10 @@ function Protocols() {
                     return testingID
                 }
             }
+
         }
-        catch {
+        catch (e) {
+            console.warn(e)
             return 0
         }
 
@@ -186,6 +188,8 @@ function Protocols() {
 
         </table>
         {/* END Table */}
+
+        <div className="uk-padding-small"></div>
 
 
         <Helmet>

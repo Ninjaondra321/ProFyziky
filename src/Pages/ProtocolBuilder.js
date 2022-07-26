@@ -1,15 +1,40 @@
 import { useParams, useNavigate, } from "react-router-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 
-import ReactQuill from 'react-quill';
+// KaTeX dependency
+import katex from "katex";
+import "katex/dist/katex.css";
+
+// MathQuill dependency
+// import "./jquery";
+import "mathquill/build/mathquill.js";
+import "mathquill/build/mathquill.css";
+
+// mathquill4quill include
+import mathquill4quill from "mathquill4quill";
+import "mathquill4quill/mathquill4quill.css";
+
+
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 
 import { quillBetterTable } from "quill-better-table";
 
 import gymzlLogo from "../Imgs/Logos/gymzl.jpg"
+
+
+import ImageResize from 'quill-image-resize-module-react';
+
+
+
+window.katex = katex;
+
+
+Quill.register('modules/imageResize', ImageResize);
+
 
 
 
@@ -38,6 +63,8 @@ function ProtocolBuilder() {
 
     // Section: Hlavní část
     const [hlavniCast, setHlavniCast] = useState("");
+    const hlavniCastQuill = useRef();
+
 
     // Section: Závěr
     const [zaver, setZaver] = useState("");
@@ -137,6 +164,36 @@ function ProtocolBuilder() {
         }
 
     }, []);
+
+    const CUSTOM_OPERATORS = [
+        ["\\pm", "\\pm"],
+        ["\\sqrt{x}", "\\sqrt"],
+        ["\\sqrt[3]{x}", "\\sqrt[3]{}"],
+        ["\\sqrt[n]{x}", "\\nthroot"],
+        ["\\frac{x}{y}", "\\frac"],
+        ["\\sum^{s}_{x}{d}", "\\sum"],
+        ["\\prod^{s}_{x}{d}", "\\prod"],
+        ["\\coprod^{s}_{x}{d}", "\\coprod"],
+        ["\\int^{s}_{x}{d}", "\\int"],
+        ["\\binom{n}{k}", "\\binom"]
+    ];
+
+
+    useEffect(() => {
+
+        try {
+
+            const enableMathQuillFormulaAuthoring = mathquill4quill({ Quill, katex });
+            enableMathQuillFormulaAuthoring(
+                hlavniCastQuill.current.editor,
+                { operators: CUSTOM_OPERATORS }
+            );
+        } catch {
+
+        }
+
+    }, []);
+
 
     function askForProtocolNumber() {
         const protocolNumber = prompt('Kolikátá je to laboratorní práce? (viz Cvičení č.___)     PS: Z nějakého důvodu tohle okno vyskakuje dvakrát; odpovězte prosím strjně')
@@ -434,17 +491,32 @@ function ProtocolBuilder() {
                         <div style={{ paddingLeft: "50px", }} >
 
                             <div className="uk-margin">
-                                <ReactQuill theme="snow" defaultValue={hlavniCast} onChange={setHlavniCast}
-                                    modules={
-                                        {
-                                            toolbar: [
-                                                [{ 'header': [2, 3, false] }],
-                                                [{ "align": [false, 'center', 'right', 'justify'] }],
-                                                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-                                                ['link', 'image'],
-                                                ['clean']
-                                            ],
-                                        }}
+
+                                {/* <PakVymaz /> */}
+
+                                {/* <Editor options={[["\\int^{s}_{x}{d}", "\\int"], ["\\binom{n}{k}", "\\binom"]]} key={JSON.stringify(null)} /> */}
+
+
+
+                                <ReactQuill id="moje-react-quill" ref={hlavniCastQuill} theme="snow" defaultValue={hlavniCast} onChange={setHlavniCast}
+                                    modules={{
+                                        imageResize: {
+                                            parchment: Quill.import('parchment'),
+                                            modules: ['Resize', 'DisplaySize', 'Toolbar']
+
+                                            // See optional "config" below
+                                        },
+                                        formula: true,
+
+                                        toolbar: [
+                                            [{ 'header': [2, 3, false] }],
+                                            [{ "align": [false, 'center', 'right', 'justify'] }],
+                                            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+                                            ['link', 'image'],
+                                            ["formula"],
+                                            ['clean']
+                                        ],
+                                    }}
 
                                 />
                             </div>

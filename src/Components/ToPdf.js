@@ -20,7 +20,7 @@ function ToPdf() {
     // });
     return (
         <div>
-            <h1>404</h1>
+            <h1>JSX to PDF function</h1>
         </div>
 
         // <Document>
