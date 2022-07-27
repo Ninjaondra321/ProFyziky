@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, } from "react-router-dom";
+import { HashRouter } from "react-router-dom"
+
 
 // Pages
 import Page404 from './Pages/404';
@@ -16,6 +18,8 @@ import NavBar from './Components/NavBar';
 import "./Styles/ui-kit-z-webu.css"
 import InitialSettings from './Components/InitialSettings';
 import Analytics from './Analytics/Analytics';
+
+
 
 function App() {
 
@@ -84,7 +88,10 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter basename='/ProFyziky'>
+
+      {/* <BrowserRouter basename='/ProFyziky'> */}
+      <HashRouter basename='ProFyziky' >
+
 
         <div style={{ paddingTop: "80px" }}></div>
         <NavBar changeTheme={changeTheme} />
@@ -105,6 +112,7 @@ function App() {
           <Route path="/protocols/:projectName" element={<ProtocolBuilder />} />
 
 
+          <Route path="/404" element={<Page404 />} />
           <Route path="*" element={<Page404 />} />
 
 
@@ -115,9 +123,12 @@ function App() {
         {(userAgreedToCookies == "unset") &&
           <InitialSettings setUserAgreedToCookies={setUserAgreedToCookies} />
         }
+      </HashRouter>
 
-      </BrowserRouter>
-    </div>
+      {/* </BrowserRouter> */}
+
+
+    </div >
   );
 }
 

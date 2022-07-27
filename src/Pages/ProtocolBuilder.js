@@ -8,7 +8,7 @@ import katex from "katex";
 import "katex/dist/katex.css";
 
 // MathQuill dependency
-// import "./jquery";
+import "../Components/jquery.js";
 import "mathquill/build/mathquill.js";
 import "mathquill/build/mathquill.css";
 
@@ -72,6 +72,9 @@ function ProtocolBuilder() {
 
     const [ActiveSection, setActiveSection] = useState("hlava");
 
+    const [mathQuillIsSetted, setMathQuillIsSetted] = useState(false);
+
+    const enableMathQuillFormulaAuthoring = mathquill4quill({ Quill, katex });
 
 
 
@@ -167,6 +170,7 @@ function ProtocolBuilder() {
 
     const CUSTOM_OPERATORS = [
         ["\\pm", "\\pm"],
+        ["\\frac{x}", "\\/"],
         ["\\sqrt{x}", "\\sqrt"],
         ["\\sqrt[3]{x}", "\\sqrt[3]{}"],
         ["\\sqrt[n]{x}", "\\nthroot"],
@@ -178,21 +182,24 @@ function ProtocolBuilder() {
         ["\\binom{n}{k}", "\\binom"]
     ];
 
-
     useEffect(() => {
+
 
         try {
 
-            const enableMathQuillFormulaAuthoring = mathquill4quill({ Quill, katex });
             enableMathQuillFormulaAuthoring(
                 hlavniCastQuill.current.editor,
                 { operators: CUSTOM_OPERATORS }
             );
-        } catch {
+            console.debug('Hotovooooo')
+
+        } catch (e) {
+            console.debug(e)
+
 
         }
+    }, [hlavniCastQuill]);
 
-    }, []);
 
 
     function askForProtocolNumber() {
@@ -483,9 +490,10 @@ function ProtocolBuilder() {
                 {/* END Pomůcky section */}
 
                 {/* Hlavní část section */}
-                {ActiveSection == "hlavni-cast" &&
+                <div className={ActiveSection == "hlavni-cast" ? "" : "uk-hidden"} >
 
-                    <div className="uk-animation-slide-left-medium" >
+
+                    <div className={ActiveSection == "hlavni-cast" ? "uk-animation-slide-left-medium uk-animation-reversed" : "uk-animation-slide-left-medium"} >
 
                         <h1 className="uk-padding-small"> <span style={{ color: "gray" }}>Sekce:</span> Hlavní část</h1>
                         <div style={{ paddingLeft: "50px", }} >
@@ -495,8 +503,6 @@ function ProtocolBuilder() {
                                 {/* <PakVymaz /> */}
 
                                 {/* <Editor options={[["\\int^{s}_{x}{d}", "\\int"], ["\\binom{n}{k}", "\\binom"]]} key={JSON.stringify(null)} /> */}
-
-
 
                                 <ReactQuill id="moje-react-quill" ref={hlavniCastQuill} theme="snow" defaultValue={hlavniCast} onChange={setHlavniCast}
                                     modules={{
@@ -550,7 +556,8 @@ function ProtocolBuilder() {
                             <button className="uk-button uk-button-primary" onClick={() => setActiveSection("zaver")}>Pokračovat {"-->"} </button>
                         </div>
                     </div>
-                }
+                </div>
+
 
                 {/* END Hlavní část section */}
 
@@ -775,7 +782,7 @@ function ProtocolBuilder() {
                                 <p>{pomucky}</p>
                                 :
                                 <p style={{ color: "#999999" }}>
-                                    Vývar z hladových opic, kuřecí řízek z mladého býčka, kyselina pentahydrogenfluorovodíková, medvědí česnek
+                                    Vývar z hladových opic, kuřecí řízek z mladého býčka, kyselina pentahydrogenfluorovodíková, medvědí česnek a 3,245 špetky lásky
                                 </p>
                             }
 

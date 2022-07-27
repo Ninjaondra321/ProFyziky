@@ -18,15 +18,15 @@ function DraggingSurroundingBall({ imgX, imgY, alignX, alignY, direction, drawMa
         <Circle x={positionX} y={positionY} fill="blue" draggable={true} radius={8} onDragEnd={(e) => {
             setPositionX(Math.round(e.target.attrs.x / 50) * 50);
             setPositionY(Math.round(e.target.attrs.y / 50) * 50);
-            drawMangattanLine(
-                imgX,
-                imgY,
-                alignX,
-                alignY,
-                Math.round(e.target.attrs.x / 50) * 50,
-                Math.round(e.target.attrs.y / 50) * 50,
-                direction
-            )
+            // drawMangattanLine(
+            //     imgX,
+            //     imgY,
+            //     alignX,
+            //     alignY,
+            //     Math.round(e.target.attrs.x / 50) * 50,
+            //     Math.round(e.target.attrs.y / 50) * 50,
+            //     direction
+            // )
         }}
         />
 

@@ -294,40 +294,32 @@ function CircuitBuilder() {
                         })}
                     {stageLines &&
                         stageLines.map(obj => {
+                            console.log(obj)
                             // return <LineComponent id={obj.id} x={obj.startX} y={obj.startY} points={obj.points} key={obj.id} direction={obj.direction} triggerUnsaved={() => setIsSaved(false)} />
                             return <Line id={obj.id} x={obj.startX} y={obj.startY} stroke="green" strokeWidth={9} points={obj.points} key={obj.id} />
                         })}
 
-                    {/* {stageDraggingBalls &&
-                        stageDraggingBalls.map(arr => { return arr.balls.map(obj => <DraggingSurroundingBall imgX={obj.imgX} imgY={obj.imgY} alignX={obj.alignX} alignY={obj.alignY} direction={obj.direction} componentID={arr.id -}} />
-                        )
-                        )
-
-                    } */}
-
-                    {/* {stageDraggingBalls &&
-                        stageDraggingBalls.map(arr =>
-                            <>      {
-                                arr.balls.map(arrPodruhe => {
-                                    arrPodruhe.map(obj =>
-                                        <DraggingSurroundingBall imgX={obj} imgY={obj.imgY} alignX={obj.alignX} alignY={obj.alignY} direction={obj.direction} componentID={arr.id} />
-                                    )
-                                }
-                                )}
-                            </ >
+                    {stageDraggingBalls &&
+                        stageDraggingBalls.map(obj1 =>
+                            obj1.balls.map(obj =>
+                                <DraggingSurroundingBall imgX={obj.imgX} imgY={obj.imgY} alignX={obj.alignX} alignY={obj.alignY} direction={obj.direction} componentID={obj1.id} />
+                            )
                         )
 
-                    } */}
+                    }
 
 
 
 
 
-                    {/* <SourceImage /> */}
-                    {/* 
-                    <ImageComponent id={0} x={15} y={15} img="zdroj" triggerUnsaved={() => setIsSaved(false)} />
-                    <ImageComponent id={1} x={15} y={15} img="zarovka" triggerUnsaved={() => setIsSaved(false)} />
-                    <ImageComponent triggerUnsaved={() => setIsSaved(false)} id={2} x={15} y={15} /> */}
+
+
+
+
+
+
+
+
 
                 </Layer>
 

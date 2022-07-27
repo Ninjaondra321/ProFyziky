@@ -61,10 +61,23 @@ function ImageComponent({ x, y, img, imgLibrary, DraggingBalls, setDraggingBalls
                 BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.height, alignY: grid * i, direction: "right" })
             }
 
+            let draggingBallsCopy = DraggingBalls
+
+            for (let i = 0; i < draggingBallsCopy.length; i++) {
+
+                if (draggingBallsCopy.id == id) {
+                    draggingBallsCopy.splice(i)
+                }
+
+            }
+
             // setBallsAround(BallsList)
             console.log(DraggingBalls)
-            console.log({ id: id, balls: [BallsList] })
-            setDraggingBalls([...DraggingBalls, { id: id, balls: [BallsList] }])
+            console.log({ id: id, balls: BallsList })
+
+            draggingBallsCopy.push({ id: id, balls: BallsList })
+            setDraggingBalls(draggingBallsCopy)
+            // setDraggingBalls([...DraggingBalls, { id: id, balls: BallsList }])
 
         } catch (e) {
 
