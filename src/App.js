@@ -90,7 +90,7 @@ function App() {
     <div className="App">
 
       {/* <BrowserRouter basename='/ProFyziky'> */}
-      <HashRouter basename='ProFyziky' >
+      <HashRouter  >
 
 
         <div style={{ paddingTop: "80px" }}></div>

@@ -2,9 +2,20 @@
 import { Stage, Layer, Rect, Text, Circle, Line, Image } from 'react-konva';
 
 
-function LineComponent({ x, y, points, id, direction }) {
-    return (<dir></dir>
-        // <Line x={x} y={y} points={points} id= />
+function LineComponent({ startX, startY, startAlignX, startAlignY, endX, endY, endAlignX, endAlignY }) {
+    // console.log(startX, startY, startAlignX, startAlignY, endX, endY, endAlignX, endAlignY)
+
+    return (
+        <Line
+            points={[
+                startY + startAlignX, startX + startAlignY,
+                endY + endAlignX, endX + endAlignY
+            ]}
+
+            stroke="black"
+            strokeWidth={9}
+            id={'' + Math.random()}
+        />
     )
 }
 export default LineComponent;

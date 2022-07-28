@@ -33,12 +33,10 @@ function Circuits() {
                 IDs.push(obj.id)
             }
 
-            console.log(IDs)
 
 
             // Try using lenght as an ID
             if (!IDs.includes("" + IDs.length)) {
-                console.log("Returning: ", IDs.length)
                 return IDs.length
             }
 
@@ -49,7 +47,6 @@ function Circuits() {
                 if (!IDs.includes("" + testingID)) {
                     return testingID
                 } else {
-                    console.log(testingID)
                 }
             }
         }

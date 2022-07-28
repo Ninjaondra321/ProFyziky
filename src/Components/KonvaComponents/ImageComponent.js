@@ -8,7 +8,7 @@ import idkImgRaw from "../../Imgs/ElComponents/idk.png"
 import bodImgRaw from "../../Imgs/ElComponents/bod.png"
 import DraggingSurroundingBall from './DraggingSurroundingBall';
 
-function ImageComponent({ x, y, img, imgLibrary, DraggingBalls, setDraggingBalls, id, defaultRotation, grid, triggerUnsaved, saveIntoState, drawMangattanLine }) {
+function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, DraggingBalls, setDraggingBalls, setDrawingMode, id, defaultRotation, grid, triggerUnsaved, saveIntoState, setStartingPoint, drawMangattanLine }) {
     const [image01] = useImage(zarovkaImgRaw)
     const [hovno] = useImage(idkImgRaw)
     const [image] = useImage(sourceImgRaw)
@@ -20,6 +20,7 @@ function ImageComponent({ x, y, img, imgLibrary, DraggingBalls, setDraggingBalls
     const [BallsAround, setBallsAround] = useState();
 
     const [isHovering, setIsHovering] = useState(false);
+
 
     var sourceImg = null
 
@@ -52,28 +53,33 @@ function ImageComponent({ x, y, img, imgLibrary, DraggingBalls, setDraggingBalls
             let coundOnX = Math.ceil(sourceImg.height / grid)
 
             let BallsList = []
-            for (let i = 0; i < coundOnX + 1; i++) {
-                BallsList.push({ imgX: positionX, imgY: positionY, alignX: grid * i, alignY: 0, direction: "top" })
-                BallsList.push({ imgX: positionX, imgY: positionY, alignX: grid * i, alignY: sourceImg.width, direction: "bottom" })
-            }
-            for (let i = 0; i < coundOnY + 1; i++) {
-                BallsList.push({ imgX: positionX, imgY: positionY, alignX: 0, alignY: grid * i, direction: "left" })
-                BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.height, alignY: grid * i, direction: "right" })
-            }
+            // for (let i = 0; i < coundOnX + 1; i++) {
+            //     BallsList.push({ imgX: positionX, imgY: positionY, alignX: grid * i, alignY: 0, direction: "top" })
+            //     BallsList.push({ imgX: positionX, imgY: positionY, alignX: grid * i, alignY: sourceImg.width, direction: "bottom" })
+            // }
+            // for (let i = 0; i < coundOnY + 1; i++) {
+            //     BallsList.push({ imgX: positionX, imgY: positionY, alignX: 0, alignY: grid * i, direction: "left" })
+            //     BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.height, alignY: grid * i, direction: "right" })
+            // }
+
+            BallsList.push({ imgX: positionX, imgY: positionY, alignX: 0, alignY: sourceImg.width / 2, direction: "left" })
+            BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.width, alignY: sourceImg.height / 2, direction: "right" })
+            BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.width / 2, alignY: sourceImg.height, direction: "right" })
+            BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.width / 2, alignY: 0, direction: "right" })
 
             let draggingBallsCopy = DraggingBalls
 
             for (let i = 0; i < draggingBallsCopy.length; i++) {
+                if (draggingBallsCopy[i].id == id) {
+                    console.log('Match found')
 
-                if (draggingBallsCopy.id == id) {
                     draggingBallsCopy.splice(i)
                 }
 
             }
 
-            // setBallsAround(BallsList)
-            console.log(DraggingBalls)
-            console.log({ id: id, balls: BallsList })
+            setBallsAround(BallsList)
+
 
             draggingBallsCopy.push({ id: id, balls: BallsList })
             setDraggingBalls(draggingBallsCopy)
@@ -89,7 +95,6 @@ function ImageComponent({ x, y, img, imgLibrary, DraggingBalls, setDraggingBalls
     }, [sourceImg, x, y, positionX, positionY]);
 
 
-
     return (<>
 
         <Image image={sourceImg} x={positionX} y={positionY} id={id} draggable={true}
@@ -102,21 +107,54 @@ function ImageComponent({ x, y, img, imgLibrary, DraggingBalls, setDraggingBalls
                 setPositionY(Math.round(e.target.attrs.y / 50) * 50);
             }
             }
+
+            onClick={() => { setActiveImgID(id) }}
+            onTap={() => { setActiveImgID(id) }}
+            onDblClick={() => { setDrawingMode(false); setActiveImgID(99999) }}
+            onDblTap={() => { setDrawingMode(false); setActiveImgID(99999) }}
+
+
+
         />
 
 
-        {/* {BallsAround &&
-            BallsAround.map(obj =>
-                // <Circle x={arr[0]} y={arr[1]} key={Math.random()} radius={8} fill="blue" />
+        {(BallsAround && activeImgID == id) &&
+            BallsAround.map(obj => {
+                return <Circle x={obj.imgX + obj.alignX} y={obj.imgY + obj.alignY} key={obj.id} radius={15} fill="blue"
+
+                    onClick={() => {
+                        setDrawingMode(true);
+                        setStartingPoint({ imgID: id, alignX: obj.alignX, alignY: obj.alignY, direction: obj.direction })
+                    }}
+
+                    onTap={() => {
+                        setDrawingMode(true);
+                        setStartingPoint({ imgID: id, alignX: obj.alignX, alignY: obj.alignY, direction: obj.direction })
+
+                    }}
+
+                    draggable={true}
+
+                    onDragStart={() => {
+                        setDrawingMode(true);
+                        setStartingPoint({ imgID: id, alignX: obj.alignX, alignY: obj.alignY, direction: obj.direction, x: obj.imgX, y: obj.imgY })
+                    }}
+                    onDragEnd={(e) => {
+                        setDrawingMode(false);
+                        drawMangattanLine(e.target.attrs.x, e.target.attrs.y)
+                    }}
+
+                />
+
+            }
 
 
-
-                <DraggingSurroundingBall componentID={id} imgX={positionX} imgY={positionY} alignX={obj.alignX} alignY={obj.alignY} direction={obj.direction} key={Math.random()} drawMangattanLine={drawMangattanLine} />
+                // <DraggingSurroundingBall componentID={id} imgX={positionX} imgY={positionY} alignX={obj.alignX} alignY={obj.alignY} direction={obj.direction} key={Math.random()} drawMangattanLine={drawMangattanLine} />
 
 
             )
 
-        } */}
+        }
     </>
     );
 }

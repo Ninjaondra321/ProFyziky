@@ -53,7 +53,7 @@ function Protocols() {
     function generateNewId() {
         try {
 
-            let p = JSON.parse(localStorage.getItem('ProFyziky-Protocolos'))
+            let p = JSON.parse(localStorage.getItem('ProFyziky-Protocols'))
 
 
             let IDs = []
@@ -62,7 +62,6 @@ function Protocols() {
                 IDs.push(obj.id)
             }
 
-            console.log(IDs)
 
 
             // Try using lenght as an ID

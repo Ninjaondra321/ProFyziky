@@ -11623,3 +11623,37 @@ textarea {
     background-color: white !important;
     z-index: 999999;
 }
+
+.moje-vyber-komponentu .sidebarShowingThing {
+    background-color: var(--main-color);
+    border-radius: 0px 15px 15px 0px;
+    position: fixed;
+    left: 380px;
+    bottom: 40px;
+    bottom: calc((100vh - 150px)/2);
+    height: 40px;
+    width: 20px;
+}
+
+.moje-vyber-komponentu.hidden {
+    left: -380px !important;
+}
+
+.moje-vyber-komponentu.hidden .sidebarShowingThing {
+    left: 0px !important;
+}
+
+.moje-vyber-komponentu,
+.sidebarShowingThing {
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.7s;
+}
+
+
+body {
+    overscroll-behavior: contain !important;
+
+}
+
+.uk-tile {
+    margin-left: 30px;
+}
