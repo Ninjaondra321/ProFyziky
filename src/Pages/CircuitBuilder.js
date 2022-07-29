@@ -49,6 +49,8 @@ function CircuitBuilder() {
     ]
 
 
+    console.log(stageLines)
+
 
     function zoomCanvasPlus() {
         if (stageScale < 1.6) { setStageScale(stageScale + 0.2) }
@@ -157,7 +159,6 @@ function CircuitBuilder() {
     }
 
 
-
     function drawMangattanLine(x, y) {
         x = Math.round(x / 50) * 50
         y = Math.round(y / 50) * 50
@@ -178,6 +179,9 @@ function CircuitBuilder() {
             console.log(component.balls)
             for (let ball of component.balls) {
                 if ((ball.imgX + ball.alignX == x) || (ball.imgY + ball.alignY == y)) {
+                    console.log(ball.imgX, ball.imgY)
+                    console.log(ball.alignX, ball.alignY)
+                    console.log(x, y)
                     endImgID = component.id
                     endAlignX = x - ball.imgX
                     endAlignY = y - ball.imgY
@@ -259,6 +263,22 @@ function CircuitBuilder() {
     }
 
 
+    function deleteLine(id) {
+        let linees = stageLines
+        console.log(linees)
+        console.log(linees.length)
+        for (let i = 0; i < linees.length; i++) {
+            console.log(linees)
+            if (linees[i].id == id) {
+                linees.splice(i, 1)
+                console.log(linees)
+                // setStageLines(linees)
+                return
+            }
+
+        }
+        // console.log('Ahojjj')
+    }
 
 
 
@@ -348,6 +368,7 @@ function CircuitBuilder() {
                         stageTexts.map(obj => {
                             return <TextComponent id={obj.id} x={obj.x} y={obj.y} text={obj.value} key={obj.id} triggerUnsaved={() => setIsSaved(false)} />
                         })}
+
                     {stageLines &&
                         stageLines.map(obj =>
                             <LineComponent
@@ -358,6 +379,9 @@ function CircuitBuilder() {
                                 endY={getImgCoordinates(obj.endImgID)[1]}
                                 endAlignX={obj.endAlignX}
                                 endAlignY={obj.endAlignY}
+                                id={obj.id}
+                                deleteLine={deleteLine}
+
                             />
                             // return <Line id={obj.id} x={obj.startX} y={obj.startY} stroke="green" strokeWidth={9} points={[getImgCoordinates(obj.startImgID)[0], getImgCoordinates(obj.startImgID)[1], getImgCoordinates(obj.endImgID)[0], getImgCoordinates(obj.endImgID)[1]]} key={obj.id} />
                         )}

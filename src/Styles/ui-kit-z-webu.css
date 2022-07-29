@@ -11473,7 +11473,7 @@ textarea {
 
 .A4 {
     width: 20.3cm !important;
-    height: 28.6cm !important;
+    min-height: 28.6cm !important;
     background-color: white !important;
     border-radius: 2px;
     display: inherit !important;

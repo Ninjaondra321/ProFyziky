@@ -119,7 +119,7 @@ function ProtocolBuilder() {
             protocols.push({
                 id: projectName,
                 dateOfCreation: "" + date.getDate() + "." + date.getMonth() + "." + date.getFullYear(),
-                fileName: userInfo.LastName.toUpperCase() + "_" + trida + "_LP" + n,
+                fileName: userInfo.LastName.toUpperCase() + "_" + trida + "_LP" + n + userInfo.Class[-1],
                 name: userInfo.FirstName + " " + userInfo.LastName,
                 coleague: userInfo.Coworker,
                 class: userInfo.Class,
@@ -170,8 +170,9 @@ function ProtocolBuilder() {
 
     const CUSTOM_OPERATORS = [
         ["\\pm", "\\pm"],
-        ["\\frac{x}", "\\/"],
         ["\\sqrt{x}", "\\sqrt"],
+        ["\\underline{x}", "\\underline"],
+        ["\\overline{x}", "\\overline"],
         ["\\sqrt[3]{x}", "\\sqrt[3]{}"],
         ["\\sqrt[n]{x}", "\\nthroot"],
         ["\\frac{x}{y}", "\\frac"],
@@ -179,7 +180,9 @@ function ProtocolBuilder() {
         ["\\prod^{s}_{x}{d}", "\\prod"],
         ["\\coprod^{s}_{x}{d}", "\\coprod"],
         ["\\int^{s}_{x}{d}", "\\int"],
-        ["\\binom{n}{k}", "\\binom"]
+        ["\\binom{n}{k}", "\\binom"],
+        ["\\delta", "\\delta"],
+        ["\\Delta", "\\Delta"],
     ];
 
     useEffect(() => {
