@@ -12,6 +12,8 @@ import Homepage from './Pages/Homepage';
 import ProtocolBuilder from './Pages/ProtocolBuilder';
 import Protocols from './Pages/Protocols';
 import Settings from './Pages/Settings';
+import DocsHomepage from './Pages/DocsHomePage';
+import DocsFiles from './Pages/DocsFiles';
 
 // Components
 import NavBar from './Components/NavBar';
@@ -30,21 +32,29 @@ function App() {
     // Set preferences
     try {
       let p = JSON.parse(localStorage.getItem('ProFyziky-Preferences'))
-      if (["light", "dark"].includes(p.theme)) {
-        setTheme(p.theme)
-      } else {
-        setTheme("light")
+
+      console.log(p)
+
+      if (p == undefined || p == null) {
+        p = { theme: "light", userAgreedToCookies: "unset" }
+        console.log(p)
+        localStorage.setItem('ProFyziky-Preferences', JSON.stringify(p))
       }
 
+
+      setTheme(p.theme)
       setUserAgreedToCookies(p.userAgreedToCookies)
+
+
+      // setUserAgreedToCookies(p.userAgreedToCookies)
 
 
     } catch (e) {
       console.debug(e)
 
-      localStorage.setItem('ProFyziky-Preferences', JSON.stringify({ theme: "light", userAgreedToCookies: "unset" }))
-      setTheme("light")
-      setUserAgreedToCookies("unset")
+      // localStorage.setItem('ProFyziky-Preferences', JSON.stringify({ theme: "light", userAgreedToCookies: "unset" }))
+      // setTheme("light")
+      // setUserAgreedToCookies("unset")
     }
   }, []);
 
@@ -70,9 +80,6 @@ function App() {
     }
   }, [theme]);
 
-  useEffect(() => {
-    localStorage.setItem('ProFyziky-Preferences', JSON.stringify({ theme: theme, userAgreedToCookies: userAgreedToCookies }))
-  }, [theme, userAgreedToCookies]);
 
 
   function changeTheme() {
@@ -83,7 +90,15 @@ function App() {
     }
   }
 
-  console.warn(userAgreedToCookies)
+  useEffect(() => {
+    if (theme && (userAgreedToCookies != null)) {
+
+      localStorage.setItem('ProFyziky-Preferences', JSON.stringify({ theme: theme, userAgreedToCookies: userAgreedToCookies }))
+    }
+  }, [theme, userAgreedToCookies]);
+
+  console.log(theme)
+  console.log(userAgreedToCookies)
 
 
   return (
@@ -110,6 +125,8 @@ function App() {
           <Route path="/circuits/:projectName" element={<CircuitBuilder />} />
           <Route path="/protocols" element={<Protocols />} />
           <Route path="/protocols/:projectName" element={<ProtocolBuilder />} />
+          <Route path="/docs" element={<DocsHomepage />} />
+          <Route path="/docs/:projectName" element={<DocsFiles />} />
 
 
           <Route path="/404" element={<Page404 />} />

@@ -1,5 +1,10 @@
+import { useParams } from "react-router-dom";
+
 function DocsFiles() {
-    return (<div>Docs Files</div>);
+    let { projectName } = useParams()
+
+
+    return (<div>Docs Files + {projectName}</div>);
 }
 
 export default DocsFiles;
