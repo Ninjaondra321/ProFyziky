@@ -170,19 +170,17 @@ function ProtocolBuilder() {
 
     const CUSTOM_OPERATORS = [
         ["\\pm", "\\pm"],
+        ["\\doteq", "\\doteq"],
         ["\\sqrt{x}", "\\sqrt"],
         ["\\underline{x}", "\\underline"],
         ["\\overline{x}", "\\overline"],
         ["\\sqrt[3]{x}", "\\sqrt[3]{}"],
         ["\\sqrt[n]{x}", "\\nthroot"],
         ["\\frac{x}{y}", "\\frac"],
-        ["\\sum^{s}_{x}{d}", "\\sum"],
-        ["\\prod^{s}_{x}{d}", "\\prod"],
-        ["\\coprod^{s}_{x}{d}", "\\coprod"],
-        ["\\int^{s}_{x}{d}", "\\int"],
-        ["\\binom{n}{k}", "\\binom"],
         ["\\delta", "\\delta"],
         ["\\Delta", "\\Delta"],
+        ["BOX", "\\fcolorbox{red}{aqua}"],
+        ["x^{y}", "\\^{}"],
     ];
 
     useEffect(() => {

@@ -2,15 +2,16 @@
 import { Stage, Layer, Rect, Text, Circle, Line, Image } from 'react-konva';
 
 
-function LineComponent({ startX, startY, startAlignX, startAlignY, endX, endY, endAlignX, endAlignY, id, deleteLine }) {
-    // console.log(startX, startY, startAlignX, startAlignY, endX, endY, endAlignX, endAlignY)
-
+function LineComponent({ startX, startY, startAlignX, startAlignY, startDirection, endX, endY, endAlignX, endAlignY, endDirection, id, deleteLine }) {
 
 
     return (
         <Line
             points={[
                 startY + startAlignX, startX + startAlignY,
+
+
+
                 endY + endAlignX, endX + endAlignY
             ]}
 

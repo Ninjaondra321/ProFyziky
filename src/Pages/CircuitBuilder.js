@@ -168,23 +168,30 @@ function CircuitBuilder() {
 
         console.log(stageDraggingBalls)
 
+        console.debug(StartingPoint)
+
+
+
 
 
         let endImgID = null
         let endAlignX = null
         let endAlignY = null
+        let endDirection
 
         for (let component of stageDraggingBalls) {
             console.log(component)
             console.log(component.balls)
             for (let ball of component.balls) {
                 if ((ball.imgX + ball.alignX == x) || (ball.imgY + ball.alignY == y)) {
-                    console.log(ball.imgX, ball.imgY)
-                    console.log(ball.alignX, ball.alignY)
-                    console.log(x, y)
+                    console.debug(ball)
+                    // console.log(ball.imgX, ball.imgY)
+                    // console.log(ball.alignX, ball.alignY)
+                    // console.log(x, y)
                     endImgID = component.id
                     endAlignX = x - ball.imgX
                     endAlignY = y - ball.imgY
+                    endDirection = ball.direction
                     break
                 }
             }
@@ -203,10 +210,12 @@ function CircuitBuilder() {
             startImgID: StartingPoint.imgID,
             startAlignX: StartingPoint.alignX,
             startAlignY: StartingPoint.alignY,
+            startDirection: StartingPoint.direction,
 
             endImgID: endImgID,
             endAlignX: endAlignX,
             endAlignY: endAlignY,
+            endDirection: endDirection,
 
 
             // startImgID: StartingPoint.imgID,
@@ -374,11 +383,14 @@ function CircuitBuilder() {
                             <LineComponent
                                 startX={getImgCoordinates(obj.startImgID)[0]}
                                 startY={getImgCoordinates(obj.startImgID)[1]}
-                                startAlignX={obj.startAlignX} startAlignY={obj.startAlignY}
+                                startAlignX={obj.startAlignX}
+                                startAlignY={obj.startAlignY}
+                                startDirection={obj.startDirection}
                                 endX={getImgCoordinates(obj.endImgID)[0]}
                                 endY={getImgCoordinates(obj.endImgID)[1]}
                                 endAlignX={obj.endAlignX}
                                 endAlignY={obj.endAlignY}
+                                endDirection={obj.endDirection}
                                 id={obj.id}
                                 deleteLine={deleteLine}
 

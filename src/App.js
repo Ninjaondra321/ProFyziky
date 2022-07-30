@@ -15,6 +15,9 @@ import Settings from './Pages/Settings';
 import DocsHomepage from './Pages/DocsHomePage';
 import DocsFiles from './Pages/DocsFiles';
 
+import Data from './Pages/Data';
+import DataBuilder from './Pages/DataBuilder';
+
 // Components
 import NavBar from './Components/NavBar';
 import "./Styles/ui-kit-z-webu.css"
@@ -33,11 +36,8 @@ function App() {
     try {
       let p = JSON.parse(localStorage.getItem('ProFyziky-Preferences'))
 
-      console.log(p)
-
       if (p == undefined || p == null) {
         p = { theme: "light", userAgreedToCookies: "unset" }
-        console.log(p)
         localStorage.setItem('ProFyziky-Preferences', JSON.stringify(p))
       }
 
@@ -65,7 +65,6 @@ function App() {
 
     // Upravit theme
     if (theme == "light") {
-      console.log('Nastavuji theme light')
       document.documentElement.style.setProperty('--text-color', '#222');
       document.documentElement.style.setProperty('--text-secondary-color', '#666');
       document.documentElement.style.setProperty('--background-color', '#fff');
@@ -97,9 +96,6 @@ function App() {
     }
   }, [theme, userAgreedToCookies]);
 
-  console.log(theme)
-  console.log(userAgreedToCookies)
-
 
   return (
     <div className="App">
@@ -127,6 +123,8 @@ function App() {
           <Route path="/protocols/:projectName" element={<ProtocolBuilder />} />
           <Route path="/docs" element={<DocsHomepage />} />
           <Route path="/docs/:projectName" element={<DocsFiles />} />
+          <Route path="/data" element={<Data />} />
+          <Route path="/data/:projectName" element={<DataBuilder />} />
 
 
           <Route path="/404" element={<Page404 />} />
