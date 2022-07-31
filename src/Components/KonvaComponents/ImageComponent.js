@@ -8,6 +8,8 @@ import idkImgRaw from "../../Imgs/ElComponents/idk.png"
 import bodImgRaw from "../../Imgs/ElComponents/bod.png"
 import DraggingSurroundingBall from './DraggingSurroundingBall';
 
+import rotate from "../../Imgs/rotate.png"
+
 function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, DraggingBalls, setDraggingBalls, setDrawingMode, id, defaultRotation, grid, triggerUnsaved, saveIntoState, setStartingPoint, drawMangattanLine }) {
     const [image01] = useImage(zarovkaImgRaw)
     const [hovno] = useImage(idkImgRaw)
@@ -20,6 +22,10 @@ function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, Dr
     const [BallsAround, setBallsAround] = useState();
 
     const [isHovering, setIsHovering] = useState(false);
+
+    const [rotateImage] = useImage(rotate)
+
+    const [rotation, setRotation] = useState(defaultRotation);
 
 
     var sourceImg = null
@@ -64,8 +70,8 @@ function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, Dr
 
             BallsList.push({ imgX: positionX, imgY: positionY, alignX: 0, alignY: sourceImg.width / 2, direction: "left" })
             BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.width, alignY: sourceImg.height / 2, direction: "right" })
-            BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.width / 2, alignY: sourceImg.height, direction: "right" })
-            BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.width / 2, alignY: 0, direction: "right" })
+            BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.width / 2, alignY: sourceImg.height, direction: "bottom" })
+            BallsList.push({ imgX: positionX, imgY: positionY, alignX: sourceImg.width / 2, alignY: 0, direction: "top" })
 
             let draggingBallsCopy = DraggingBalls
 
@@ -94,15 +100,42 @@ function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, Dr
 
     }, [sourceImg, x, y, positionX, positionY]);
 
+    if (rotation == 360) {
+        setRotation(rotation - 360)
+    }
+
+    function adjuctCoordinates() {
+        try {
+
+            console.log(sourceImg.width, sourceImg.height)
+            console.log(rotation)
+            if (rotation == 90) {
+                return [sourceImg.width, 0]
+            }
+            if (rotation == 180) {
+                return [sourceImg.height, + sourceImg.width]
+            }
+            if (rotation == 270) {
+                return [0, sourceImg.height]
+            }
+            return [0, 0]
+        } catch (e) {
+            console.log(e)
+            console.warn('Něco se nepovedlo')
+            return [0, 0]
+        }
+
+    }
+
 
     return (<>
 
-        <Image image={sourceImg} x={positionX} y={positionY} id={id} draggable={true}
+        <Image image={sourceImg} x={positionX + adjuctCoordinates()[0]} y={positionY + adjuctCoordinates()[1]} id={id} draggable={true}
 
-            rotation={defaultRotation}
+            rotation={rotation}
             onDragStart={() => triggerUnsaved(false)}
             onDragEnd={(e) => {
-                saveIntoState("images", id, Math.round(e.target.attrs.y / 50) * 50, Math.round(e.target.attrs.x / 50) * 50, img);
+                saveIntoState("images", id, Math.round(e.target.attrs.y / 50) * 50, Math.round(e.target.attrs.x / 50) * 50, img, rotation);
                 setPositionX(Math.round(e.target.attrs.x / 50) * 50);
                 setPositionY(Math.round(e.target.attrs.y / 50) * 50);
             }
@@ -153,6 +186,15 @@ function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, Dr
 
 
             )
+
+        }
+
+        {(activeImgID == id) &&
+            <Image image={rotateImage} x={positionX + sourceImg.width} y={positionY - 15}
+                onClick={() => { setRotation(rotation + 90); saveIntoState("images", id, positionX, positionY, img, rotation); }}
+                onTap={() => { setRotation(rotation + 90); saveIntoState("images", id, positionX, positionY, img, rotation); }}
+
+            />
 
         }
     </>

@@ -11658,4 +11658,67 @@ body {
     margin-left: 30px;
 }
 
-.moje-grid-margin>* {}
+
+
+.uk-tile-primary .uk-input,
+.uk-tile-primary .uk-select {
+    color: white !important;
+}
+
+
+/* 
+.uk-card-header-footer {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+} */
+
+.moje-fulscreen-tile {
+    position: fixed;
+    left: 50px;
+    right: 50px;
+    top: 50px;
+    bottom: 50px;
+    background-color: var(--background-color);
+    z-index: 99999;
+}
+
+.moje-fulscreen-tile-bg {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 99998;
+    background-color: rgba(0, 0, 0, 0.377);
+}
+
+.moje-data-table td {
+    padding: 5px 0px !important;
+}
+
+.moje-data-table tr>:first-child {
+    width: 9%;
+}
+
+.moje-data-table tr>:nth-child(2) {
+    width: 36%;
+}
+
+.moje-data-table tr>:nth-child(3) {
+    width: 15%;
+}
+
+.moje-data-table tr>:nth-child(4) {
+    width: 40%;
+}
+
+.moje-data-table select {
+    width: min-content;
+}
+
+.moje-cursor {
+    cursor: pointer;
+
+}

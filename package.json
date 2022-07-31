@@ -4,6 +4,8 @@
   "homepage": "https://ninjaondra321.github.io/ProFyziky/",
   "private": true,
   "dependencies": {
+    "@nivo/core": "^0.79.0",
+    "@nivo/line": "^0.79.1",
     "@react-pdf/pdfkit": "^2.4.0",
     "@react-pdf/renderer": "^2.3.0",
     "@testing-library/jest-dom": "^5.16.4",

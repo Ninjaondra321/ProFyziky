@@ -17,6 +17,8 @@ function DataBuilder() {
         { id: 2, symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
     ]);
 
+    const [fullscreenID, setFullscreenID] = useState(false);
+
 
 
     useEffect(() => {
@@ -88,23 +90,20 @@ function DataBuilder() {
     }
 
 
-    function editTiles(tileID, value) {
-        let tilesCopy = tiles
+    // function editTiles(tileID, value) {
+    //     let tilesCopy = tiles
 
-        for (let i = 0; i < tilesCopy.length; i++) {
-            if (tilesCopy[i].id == tileID) {
-                tilesCopy[i] = value
-                setTiles(tilesCopy)
-            }
-        }
+    //     for (let i = 0; i < tilesCopy.length; i++) {
+    //         if (tilesCopy[i].id == tileID) {
+    //             tilesCopy[i] = value
+    //             setTiles(tilesCopy)
+    //         }
+    //     }
 
-    }
-
-
+    // }
 
 
-
-
+    console.log(fullscreenID)
 
 
 
@@ -177,41 +176,136 @@ function DataBuilder() {
         {/* END SubNavBar */}
 
         <div className="uk-padding"></div>
-        <div className="uk-child-width-1-2 uk-grid uk-grid-match moje-grid-margin" uk-grid="">
-            <div>
-                dsdf
+        <div className="uk-container  uk-position-relative">
+
+
+            <div className="uk-child-width-1-2@m uk-grid uk-grid-match moje-grid-margin " uk-grid="">
+                <div className="uk-padding-small">
+                    <table class="uk-table  uk-table-justify moje-data-table">
+                        <thead>
+                            <tr>
+                                <th>Značka</th>
+                                <th>Název</th>
+                                <th>Jednotka</th>
+                                <th>Hodnota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> <input type="text" className="uk-input" placeholder="s" /> </td>
+                                <td> <input type="text" className="uk-input" placeholder="Rychlost" /> </td>
+                                <td> <input type="text" className="uk-input" placeholder="km/h" /> </td>
+                                <td>
+                                    <select name="" id="" className="uk-select">
+                                        <option value="">Konstanta</option>
+                                        <option value="">Doplnit do tabulky</option>
+                                        <option value="">Vzorec</option>
+                                    </select>
+                                    <input type="text" className="uk-input" placeholder="c" />
+                                </td>
+                            </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <button className="uk-button uk-button-default">+</button>
+
+
+                </div>
+
+                {tiles &&
+                    tiles.map(obj => {
+
+                        if (obj.type == "table") {
+                            return <Table values={values} />
+                        }
+                        else if (obj.type == "graph") {
+                            return <Graph values={values} />
+                        }
+                        else if (obj.type == "average") {
+                            return <Average setTiles={setTiles} fullscreenID={fullscreenID} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={[
+                                { id: 0, symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                                { id: 1, symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                                { id: 2, symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                            ]} />
+                        }
+                    })
+
+                }
+
+
+                <div>
+                    <div className="center">
+
+                        <h2>+     New</h2>
+
+                    </div>
+                    <div className="uk-child-width-1-3 uk-grid-match" uk-grid="">
+                        <div className="uk-card uk-card-hover uk-card-body moje-cursor" onClick={() => setTiles([...tiles, { id: getNewTileID(), type: "table", content: [] }])}>
+                            <h4>Tabulka</h4>
+                        </div>
+                        <div className="uk-card uk-card-hover uk-card-body moje-cursor" onClick={() => setTiles([...tiles, { id: getNewTileID(), type: "graph", content: [] }])}>
+                            <h4>Graf</h4>
+                        </div>
+                        <div className="uk-card uk-card-hover uk-card-body moje-cursor" onClick={() => setTiles([...tiles, { id: getNewTileID(), type: "average", content: [] }])}>
+                            <h4>Průměr</h4>
+                        </div>
+
+                        {/* <button onClick={() => setTiles([...tiles, { id: getNewTileID(), type: "table", content: [] }])}>table</button>
+                        <button onClick={() => setTiles([...tiles, { id: getNewTileID(), type: "graph", content: [] }])}>graph</button>
+                        <button onClick={() => setTiles([...tiles, { id: getNewTileID(), type: "average", content: [] }])}>average</button> */}
+
+                    </div>
+
+                </div>
+
+
+
+
+
 
 
             </div>
 
-            {tiles &&
-                tiles.map(obj => {
 
-                    if (obj.type == "table") {
-                        return <Table editTiles={editTiles} values={values} />
-                    }
-                    else if (obj.type == "graph") {
-                        return <Graph editTiles={editTiles} values={values} />
-                    }
-                    else if (obj.type == "average") {
-                        return <Average editTiles={editTiles} tileContent={obj.content} values={values} />
-                    }
-                })
-
-            }
-
-
-            <div>
-                <h1>+</h1>
-                <h3>New</h3>
-                <button onClick={() => setTiles([...tiles, { id: getNewTileID(), type: "table", content: [] }])}>table</button>
-                <button onClick={() => setTiles([...tiles, { id: getNewTileID(), type: "graph", content: [] }])}>graph</button>
-                <button onClick={() => setTiles([...tiles, { id: getNewTileID(), type: "average", content: [] }])}>average</button>
-            </div>
 
         </div>
 
 
+        {(fullscreenID) &&
+
+
+            [tiles[fullscreenID]].map((obj) => {
+                if (obj.type == "table") {
+                    return <div className="moje-fulscreen-tile "> <Table values={values} /></div>
+                }
+                else if (obj.type == "graph") {
+                    return <div className="moje-fulscreen-tile"> <Graph values={values} /></div>
+                }
+                else if (obj.type == "average") {
+                    return <div className="moje-fulscreen-tile "><Average setTiles={setTiles} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={[
+                        { id: 0, symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                        { id: 1, symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                        { id: 2, symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                    ]} /></div>
+                }
+            }
+            )
+
+
+
+        }
+        {fullscreenID &&
+
+            <div className="moje-fulscreen-tile-bg" onClick={() => setFullscreenID(false)} ></div>
+        }
+
+
+        <div className="uk-padding-large"></div>
+        <div className="uk-padding-large"></div>
     </div>);
 }
 

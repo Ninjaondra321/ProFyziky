@@ -24,19 +24,42 @@ function NavBar({ changeTheme }) {
         </div>
 
 
-        <div className="uk-navbar-right uk-visible@s">
+        <div className="uk-navbar-right ">
+            <div className="uk-hidden@s">
+
+                <a uk-toggle="target: #offcanvas-overlay" style={{ paddingRight: "15px" }}><span uk-icon="icon: menu"></span></a>
+
+            </div>
+
+            <div className="uk-visible@s">
+
+                <ul className="uk-navbar-nav">
+                    <li className="" onClick={() => changeTheme()}> <a>12</a> </li>
+                    <li className=""><Link to="/settings"><span uk-icon="icon: cog"></span></Link></li>
+                </ul>
 
 
 
-
-            <ul className="uk-navbar-nav">
-                <li className="" onClick={() => changeTheme()}> <a>12</a> </li>
-                <li className=""><Link to="/settings">34</Link></li>
-            </ul>
-
-
-
+            </div>
         </div>
+
+        <div id="offcanvas-overlay" uk-offcanvas="overlay: true">
+            <div className="uk-offcanvas-bar">
+
+                <button className="uk-offcanvas-close" type="button" uk-close=""></button>
+
+                <p><Link to="/circuits">El. Obvody</Link></p>
+                <p><Link to="/protocols">Protokoly</Link></p>
+                <p><Link to="/data">Data</Link></p>
+                <p><Link to="/docs">Dokumentace</Link></p>
+                <p><Link to="/about">O projektu</Link></p>
+
+
+
+            </div>
+        </div>
+
+
 
 
 

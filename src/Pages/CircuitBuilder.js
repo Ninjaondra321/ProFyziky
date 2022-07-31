@@ -49,7 +49,6 @@ function CircuitBuilder() {
     ]
 
 
-    console.log(stageLines)
 
 
     function zoomCanvasPlus() {
@@ -163,31 +162,16 @@ function CircuitBuilder() {
         x = Math.round(x / 50) * 50
         y = Math.round(y / 50) * 50
 
-        console.log(x, y)
         setActiveImgID(9999)
-
-        console.log(stageDraggingBalls)
-
-        console.debug(StartingPoint)
-
-
-
-
 
         let endImgID = null
         let endAlignX = null
         let endAlignY = null
-        let endDirection
+        let endDirection = null
 
         for (let component of stageDraggingBalls) {
-            console.log(component)
-            console.log(component.balls)
             for (let ball of component.balls) {
-                if ((ball.imgX + ball.alignX == x) || (ball.imgY + ball.alignY == y)) {
-                    console.debug(ball)
-                    // console.log(ball.imgX, ball.imgY)
-                    // console.log(ball.alignX, ball.alignY)
-                    // console.log(x, y)
+                if ((ball.imgX + ball.alignX == x) && (ball.imgY + ball.alignY == y)) {
                     endImgID = component.id
                     endAlignX = x - ball.imgX
                     endAlignY = y - ball.imgY
@@ -197,11 +181,19 @@ function CircuitBuilder() {
             }
         }
 
+        console.warn(endImgID)
+
         if (endImgID == null) {
-            let endImgID = genNewStageComponentId("images")
-            setStageImages([...stageImages, { id: "" + endImgID, x: x, y: y, img: "bod", rotation: 0 }])
+            console.warn(endImgID)
+
+            // let endImgID = genNewStageComponentId("images")
+            setStageImages([...stageImages, { id: "" + genNewStageComponentId("images"), x: x, y: y, img: "bod", rotation: 0 }])
+            console.log(stageImages)
             endAlignX = 0
             endAlignY = 0
+            endDirection = "left"
+        } else {
+            console.warn(endImgID)
         }
 
 
@@ -447,8 +439,9 @@ function CircuitBuilder() {
 
                 </div>
 
-                <div className="sidebarShowingThing center" onClick={() => setSidebarIsShown(!sidebarIsShown)}>
-                    V
+                <div className="sidebarShowingThing center" onClick={() => setSidebarIsShown(!sidebarIsShown)} style={{ color: "white" }}>
+                    {sidebarIsShown && <span uk-icon="icon: chevron-left"></span>}
+                    {!sidebarIsShown && <span uk-icon="icon: chevron-right"></span>}
                 </div>
 
             </div>
