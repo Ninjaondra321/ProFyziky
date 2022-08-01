@@ -20,16 +20,33 @@ function LineComponent({ startX, startY, startAlignX, startAlignY, startDirectio
         if (direction == "bottom") {
             return [0, 100]
         }
+        return [0, 0]
+    }
+
+    function findMidPoints() {
+        // Check if in line
+        if (
+            (start[0] + parseInt(updateFromDirection(startDirection)[0]) == end[0] + parseInt(updateFromDirection(endDirection)[0]))
+            ||
+            (start[1] + parseInt(updateFromDirection(startDirection)[1]) == end[1] + parseInt(updateFromDirection(endDirection)[1]))
+        ) {
+            return []
+        }
+
+        // Check if the lines are able to do pythagorean triangle
+        // if (
+        //     ()
+        // ) {
+
+        // }
+
+
+
+        return [0, 0]
+
     }
 
 
-    // console.log([
-    //     start[0], start[1],
-    //     start[0] + parseInt(updateFromDirection(startDirection)[0]), start[1] + parseInt(updateFromDirection(startDirection)[1]),
-    //     end[0] + parseInt(updateFromDirection(endDirection)[0]), end[1] + parseInt(updateFromDirection(endDirection)[1]),
-
-    //     end[0], end[1]
-    // ])
 
     console.log(endDirection, "ahadsjikhgadsjikdjkagakdsgjkgkajsdg")
 
@@ -39,6 +56,8 @@ function LineComponent({ startX, startY, startAlignX, startAlignY, startDirectio
                 start[0], start[1],
 
                 start[0] + parseInt(updateFromDirection(startDirection)[0]), start[1] + parseInt(updateFromDirection(startDirection)[1]),
+
+                ...findMidPoints(),
 
                 end[0] + parseInt(updateFromDirection(endDirection)[0]), end[1] + parseInt(updateFromDirection(endDirection)[1]),
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 
 function Average({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
     // Tady je tileContent jenom string s hodnotou valueID
@@ -103,11 +104,11 @@ function Average({ values, setTiles, tiles, tileContent, tileID, setFullscreenID
 
                 <div className="center">
 
-                    {fullscreenID == valueID &&
+                    {(fullscreenID == tileID) &&
                         <span uk-icon="shrink" onClick={() => setFullscreenID(false)} ></span>
                     }
-                    {fullscreenID != valueID &&
-                        <span uk-icon="expand" onClick={() => { console.log('asdas'); setFullscreenID(2) }}></span>
+                    {fullscreenID != tileID &&
+                        <span uk-icon="expand" onClick={() => { console.log('asdas'); setFullscreenID(tileID) }}></span>
                     }
 
                     <span uk-icon="more-vertical"></span>

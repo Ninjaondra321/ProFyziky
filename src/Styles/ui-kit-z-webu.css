@@ -11722,3 +11722,35 @@ body {
     cursor: pointer;
 
 }
+
+nav {
+    z-index: 99;
+}
+
+.homepage-circuits {
+    z-index: -1;
+}
+
+
+/* 
+
+.homepage-circuits {
+    
+background-color: blueviolet;
+
+animation: circuitZmensovator 1s linear;
+animation-play-state: paused;
+animation-delay: calc(var(--scroll) * -1s);
+animation-iteration-count: 1;
+animation-fill-mode: both;
+
+
+}
+
+@keyframes circuitZmensovator {
+    to {
+        background-color: #000;
+    }
+}
+
+*/

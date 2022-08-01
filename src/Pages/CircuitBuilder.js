@@ -42,6 +42,8 @@ function CircuitBuilder() {
 
     const [StartingPoint, setStartingPoint] = useState();
 
+    const [refresh, setRefresh] = useState();
+
     const components = [
         { name: "zarovka", title: "Žárovka", src: zarovkaImg },
         { name: "bod", title: "Bod", src: bodImg },
@@ -283,6 +285,7 @@ function CircuitBuilder() {
 
 
 
+
     return (<div>
 
         {/* SubNavBar */}
@@ -351,6 +354,9 @@ function CircuitBuilder() {
 
 
         {/* Konva Canvas */}
+        <div className="uk-hidden">
+            {refresh}
+        </div>
         <div>
             <Stage width={window.innerWidth} height={window.innerHeight - 80 - 50} onWheel={(e) => handleWheelOnKonva(e)} draggable={true} scaleX={stageScale} scaleY={stageScale} style={{ background: "#fffbbf" }}>
                 <Layer>

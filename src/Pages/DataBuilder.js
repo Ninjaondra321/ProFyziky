@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Table from "../Components/DataComponents/Table";
 import Graph from "../Components/DataComponents/Grapg";
 import Average from "../Components/DataComponents/Average";
+import { type } from "jquery";
 
 function DataBuilder() {
     let { projectName } = useParams()
@@ -12,12 +13,14 @@ function DataBuilder() {
     const [fileName, setFileName] = useState();
     const [tiles, setTiles] = useState();
     const [values, setValues] = useState([
-        { id: 0, symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-        { id: 1, symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-        { id: 2, symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+        { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+        { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+        { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
     ]);
 
     const [fullscreenID, setFullscreenID] = useState(false);
+
+    const [refresh, setRefresh] = useState();
 
 
 
@@ -102,8 +105,43 @@ function DataBuilder() {
 
     // }
 
+    function getNewValueID() {
+        let valuesCopy = values
+        let listOfIDs = []
 
-    console.log(fullscreenID)
+        for (let xx of valuesCopy) {
+            listOfIDs.push(xx.id)
+        }
+
+        let testingID = 0
+
+        while (true) {
+            if (!listOfIDs.includes(testingID)) {
+                return testingID
+            }
+            testingID += 1
+        }
+
+
+    }
+
+    function changeVaules(id, typee, value) {
+        let valuesCopy = values
+        for (let i = 0; i < valuesCopy.length; i++) {
+            if (valuesCopy[i].id == id) {
+                valuesCopy[i][typee] = value
+                console.log(valuesCopy)
+                setValues(valuesCopy)
+                setRefresh(Math.random())
+                return
+            }
+
+        }
+
+    }
+
+
+
 
 
 
@@ -181,7 +219,7 @@ function DataBuilder() {
 
             <div className="uk-child-width-1-2@m uk-grid uk-grid-match moje-grid-margin " uk-grid="">
                 <div className="uk-padding-small">
-                    <table class="uk-table  uk-table-justify moje-data-table">
+                    <table className="uk-table  uk-table-justify moje-data-table">
                         <thead>
                             <tr>
                                 <th>Značka</th>
@@ -190,20 +228,45 @@ function DataBuilder() {
                                 <th>Hodnota</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            <tr>
-                                <td> <input type="text" className="uk-input" placeholder="s" /> </td>
-                                <td> <input type="text" className="uk-input" placeholder="Rychlost" /> </td>
-                                <td> <input type="text" className="uk-input" placeholder="km/h" /> </td>
-                                <td>
-                                    <select name="" id="" className="uk-select">
-                                        <option value="">Konstanta</option>
-                                        <option value="">Doplnit do tabulky</option>
-                                        <option value="">Vzorec</option>
-                                    </select>
-                                    <input type="text" className="uk-input" placeholder="c" />
-                                </td>
-                            </tr>
+                            <div className="uk-hidden">
+                                {refresh}
+                            </div>
+
+                            {values.map(obj =>
+                                <tr>
+                                    <td>
+                                        <input type="text" className="uk-input" placeholder="s" value={obj.symbol} onChange={(e) => changeVaules(obj.id, "symbol", e.target.value)} />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" className="uk-input" placeholder="Rychlost" value={obj.nazev} onChange={(e) => changeVaules(obj.id, "nazev", e.target.value)} />
+                                    </td>
+
+                                    <td>
+                                        <input type="text" className="uk-input" placeholder="km/h" value={obj.jednotka} onChange={(e) => changeVaules(obj.id, "jednotka", e.target.value)} />
+                                    </td>
+
+                                    <td>
+                                        <select name="" id="" className="uk-select uk-width-1-5" value={obj.typ} onChange={e => changeVaules(obj.id, "typ", e.target.value)}>
+                                            <option value="konstanta">Konstanta</option>
+                                            <option value="tabulka">Tabulka</option>
+                                            <option value="vzorec">Vzorec</option>
+                                        </select>
+                                        {obj.typ == "konstanta" &&
+                                            <input type="number" className="uk-input uk-width-1-2" placeholder="9,8" value={obj.values} onChange={e => changeVaules(obj.id, "values", e.target.value)} />
+                                        }
+                                        {obj.typ == "vzorec" &&
+                                            <input type="text" className="uk-input uk-width-1-2" placeholder="c" />
+                                        }
+
+                                    </td>
+
+                                </tr>
+                            )}
+
+
 
 
 
@@ -211,7 +274,13 @@ function DataBuilder() {
 
                         </tbody>
                     </table>
-                    <button className="uk-button uk-button-default">+</button>
+                    <button
+                        style={{ height: "min-content" }}
+                        className="uk-button uk-button-default"
+                        onClick={() => setValues([...values, { id: getNewValueID(), symbol: "", nazev: "", jednotka: "", typ: "", values: [] }])
+                        }>
+                        +
+                    </button>
 
 
                 </div>
@@ -220,16 +289,16 @@ function DataBuilder() {
                     tiles.map(obj => {
 
                         if (obj.type == "table") {
-                            return <Table values={values} />
+                            return <Table setTiles={setTiles} fullscreenID={fullscreenID} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={values} />
                         }
                         else if (obj.type == "graph") {
-                            return <Graph values={values} />
+                            return <Graph setTiles={setTiles} fullscreenID={fullscreenID} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={values} />
                         }
                         else if (obj.type == "average") {
                             return <Average setTiles={setTiles} fullscreenID={fullscreenID} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={[
-                                { id: 0, symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                                { id: 1, symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                                { id: 2, symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                                { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                                { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                                { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
                             ]} />
                         }
                     })
@@ -280,7 +349,9 @@ function DataBuilder() {
 
             [tiles[fullscreenID]].map((obj) => {
                 if (obj.type == "table") {
-                    return <div className="moje-fulscreen-tile "> <Table values={values} /></div>
+                    return <div className="moje-fulscreen-tile ">
+                        <Table setTiles={setTiles} fullscreenID={fullscreenID} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={values} />
+                    </div>
                 }
                 else if (obj.type == "graph") {
                     return <div className="moje-fulscreen-tile"> <Graph values={values} /></div>
