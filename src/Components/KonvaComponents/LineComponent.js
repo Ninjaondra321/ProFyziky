@@ -1,4 +1,5 @@
 
+import { constants } from 'buffer';
 import { Stage, Layer, Rect, Text, Circle, Line, Image } from 'react-konva';
 
 
@@ -34,15 +35,59 @@ function LineComponent({ startX, startY, startAlignX, startAlignY, startDirectio
         }
 
         // Check if the lines are able to do pythagorean triangle
-        // if (
-        //     ()
-        // ) {
 
-        // }
+        // Left and right pythaborean triangle
+        if (
+            ([0].includes(updateFromDirection(startDirection)[0]))
+            &&
+            ([0].includes(updateFromDirection(endDirection)[1]))
+        ) {
+            return [start[0], end[1]]
+        }
+        // Upper and down pythaborean triangle
+        else if (
+            ([-100, 100].includes(updateFromDirection(startDirection)[0]))
+            &&
+            ([-100, 100].includes(updateFromDirection(endDirection)[1]))
+        ) {
+            return [end[0], start[1]]
+        }
+
+        // Rovnoběžné 
+        // Svislé rovnoběžky 
+        if (
+            (updateFromDirection(startDirection)[0] == 0)
+            &&
+            (updateFromDirection(endDirection)[0] == 0)
+        ) {
+            return [
+                start[0], (start[1] + end[1]) / 2,
+                end[0], (start[1] + end[1]) / 2,
+
+            ]
+        }
+        // Vodorovné rovnoběžky 
+        else if (
+            (updateFromDirection(startDirection)[1] == 0)
+            &&
+            (updateFromDirection(endDirection)[1] == 0)
+        ) {
+            console.log(end[0])
+            console.log(start[0])
+            console.log(end[0] - start[0])
+
+            return [
+                (end[0] + start[0]) / 2, start[1],
+                (end[0] + start[0]) / 2, end[1],
+            ]
+        }
 
 
 
-        return [0, 0]
+
+
+        console.log('not found any inadsj')
+        return [5000, 5000]
 
     }
 

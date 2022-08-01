@@ -15,22 +15,31 @@ function Homepage() {
 
         let windowHeight = window.innerHeight
 
-        // if (startPosition > windowHeight + 150) {
-        //     setCircuitFieldWidth(100)
-        // }
-
         console.log(startPosition)
-        // console.log(windowHeight)
 
         let offsetOnStart = 150
+        setCircuitFieldWidth(100)
 
+
+        // Před
         if (startPosition < 0 + offsetOnStart) {
             setCircuitFieldWidth(100)
         }
+        // Obraz 01 - CIRCUITS
         else if (windowHeight * 0 + offsetOnStart < startPosition && startPosition < windowHeight * 1) {
-            let vysledek = 100 - ((startPosition - offsetOnStart) / (windowHeight) * 100)
-            setCircuitFieldWidth(vysledek)
+            // let vysledek = 100 - ((startPosition - offsetOnStart) / (windowHeight) * 100) // Tohle funguje, ale je to linearní, takže nic extra
+            let vysledek = 100 - ((startPosition - offsetOnStart) ** 2 / windowHeight ** 2 * 100)
+            // let vysledek = 100 - ((startPosition - offsetOnStart) ** 3 / windowHeight ** 3 * 100)
+
+            console.warn(vysledek)
+            if (0 < vysledek <= 100) {
+                setCircuitFieldWidth(vysledek)
+            } else if (100 < vysledek) {
+                setCircuitFieldWidth(100)
+            }
+            console.warn(circuitFieldWidth)
         }
+        //  Obraz 02 - PROTOKOLY
         else if (windowHeight * 1 < startPosition < windowHeight * 2) {
 
             // setCircuitFieldWidth(15)
@@ -104,7 +113,7 @@ function Homepage() {
 
         <div className="homepage-start-y" ref={startX}></div>
 
-        <div className="center" style={{ width: "100vw", height: "calc(100vh - 80px)" }} uk-sticky=" offset: 80">
+        <div className="center" style={{ width: "100vw", height: "calc(100vh - 80px)" }} uk-sticky="end: .homepage-protocol-01 ; offset: 80">
             <div ref={circuitField} className="homepage-circuits" style={{ background: "purple", width: circuitFieldWidth + "vw", height: "calc(" + circuitFieldWidth + "vh - 80px)" }} >
                 <h1>Ahhiashdio</h1>
                 <h1>Circuit</h1>
@@ -112,13 +121,14 @@ function Homepage() {
         </div>
 
 
-        <div className="homepage-protocol-01" ref={protocol01Field} style={{ width: "100vw", height: "calc(100vh - 80px)", background: "blue" }}>
+        <div className="homepage-protocol-01" uk-sticky="end: .homepage-protocol-02 ; offset: 80" ref={protocol01Field} style={{ width: "100vw", height: "calc(100vh - 80px)", background: "blue" }}>
 
         </div>
 
         <div className="homepage-data" style={{ width: "100vw", height: "calc(100vh - 80px)", background: "yellow" }}>
 
         </div>
+        <div className="homepage-protocol-02" ref={protocol01Field} style={{ width: "100vw", height: "calc(100vh - 80px)", background: "green" }}> </div>
 
 
         <div className="uk-padding"></div>
