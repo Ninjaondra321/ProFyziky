@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ProFyziky/static/css/main.e2ff367b.css",
-    "main.js": "/ProFyziky/static/js/main.a58e2c47.js",
+    "main.css": "/ProFyziky/static/css/main.daade0ec.css",
+    "main.js": "/ProFyziky/static/js/main.47bb2230.js",
     "static/js/787.91bd4ed1.chunk.js": "/ProFyziky/static/js/787.91bd4ed1.chunk.js",
     "static/media/Symbola.svg": "/ProFyziky/static/media/Symbola.191c327f0aef5505dabc.svg",
     "static/media/Symbola.otf": "/ProFyziky/static/media/Symbola.b0c85dd4bda9eef9f78a.otf",
@@ -71,12 +71,12 @@
     "static/media/KaTeX_Size3-Regular.woff": "/ProFyziky/static/media/KaTeX_Size3-Regular.7947224e8a9914fa332b.woff",
     "static/media/KaTeX_Size3-Regular.woff2": "/ProFyziky/static/media/KaTeX_Size3-Regular.e1951519f6f0596f7356.woff2",
     "index.html": "/ProFyziky/index.html",
-    "main.e2ff367b.css.map": "/ProFyziky/static/css/main.e2ff367b.css.map",
-    "main.a58e2c47.js.map": "/ProFyziky/static/js/main.a58e2c47.js.map",
+    "main.daade0ec.css.map": "/ProFyziky/static/css/main.daade0ec.css.map",
+    "main.47bb2230.js.map": "/ProFyziky/static/js/main.47bb2230.js.map",
     "787.91bd4ed1.chunk.js.map": "/ProFyziky/static/js/787.91bd4ed1.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e2ff367b.css",
-    "static/js/main.a58e2c47.js"
+    "static/css/main.daade0ec.css",
+    "static/js/main.47bb2230.js"
   ]
 }
