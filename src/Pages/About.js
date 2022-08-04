@@ -1,9 +1,11 @@
 import { Helmet } from "react-helmet";
 
+import WorkInProgress from "./WorkInProgress";
 
 function About() {
     return (<div>
-        <h1>AboutPage</h1>
+
+        <WorkInProgress />
 
         <Helmet>
             <title>ProFyziky | O projektu</title>

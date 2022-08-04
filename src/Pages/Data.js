@@ -17,6 +17,8 @@ function Data() {
         setData(JSON.parse(l))
     }, []);
 
+    console.log(Data)
+
     function getNewID() {
         if (!Data) {
             return 0
@@ -43,29 +45,39 @@ function Data() {
     }
 
 
-    return (<div>
-        <h1>Data</h1>
-        <h1>!!TODO: Pak dodělej karty!!</h1>
 
+    return (<div className="uk-container">
+        <h1 className="uk-heading-medium" style={{ paddingTop: "10px" }}>Data</h1>
+        <h3>Pracujte s vámi již vytvořenými daty nebo založte nový projekt </h3>
 
-        <Link to={"/data/" + getNewID()}>
+        {/* <Link to={"/data/" + getNewID()}>
             <h1>+ NEW</h1>
-        </Link>
+        </Link> */}
+
+        <div className="uk-child-width-1-3 uk-grid-match" uk-grid="" style={{ paddingBottom: "50px" }}>
+
+            <div >
+                <Link to={"/data/" + getNewID()} className="uk-card-body uk-card uk-card-primary uk-card-hover">
+                    <h2>+ NEW</h2>
+                </Link>
 
 
-        {Data &&
-            Data.map(obj =>
-                <div>
-                    <Link to={obj.id}>
+            </div>
+
+            {Data &&
+                Data.map(obj =>
+                    <div >
+                        <Link to={obj.id} className="uk-card-body uk-card uk-card-default uk-card-hover">
 
 
-                        <h3>{obj.filename}</h3>
-                    </Link>
+                            <h3>{obj.fileName}</h3>
+                        </Link>
 
 
-                </div>
-            )
-        }
+                    </div>
+                )
+            }
+        </div>
 
     </div>);
 }

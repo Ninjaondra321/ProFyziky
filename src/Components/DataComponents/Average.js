@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { flushSync } from "react-dom";
 
 function Average({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
     // Tady je tileContent jenom string s hodnotou valueID
@@ -25,20 +24,80 @@ function Average({ values, setTiles, tiles, tileContent, tileID, setFullscreenID
         }
     }, []);
 
+    function naJednoPlatne(cislo) {
+
+        try {
+            cislo = parseFloat(cislo)
+            if (Math.floor(cislo) != 0) {
+                let last = undefined
+                let cisloReversedString = ("" + cislo.toFixed(0)).split("").reverse().join("")
+                for (let i = 0; i < ("" + cislo.toFixed(0)).length; i++) {
+                    const cislice = cisloReversedString[i];
+                    if (cislice != 0) {
+                        last = [cislice, i, "cele"]
+                    }
+                }
+                return last
+            } else {
+                let desetiny = ("" + cislo).split('.')[1]
+                for (let i = 0; i < desetiny.length; i++) {
+                    const cislice = desetiny[i];
+                    if (cislice != 0) {
+                        return ["0." + "0".repeat(i) + cislice, i, "desetine"]
+                    }
+
+                }
+
+            }
+        } catch (e) {
+            console.log(e)
+            return [0, 0, "cele"]
+        }
+    }
+
+
+
+
+
+    function zaokrouhli(cislo, position, type) {
+        if (type == "cele") {
+            return Math.round(cislo / 10 ** position) * 10 ** position
+        } else {
+            return cislo.toFixed(position + 1)
+        }
+    }
+
+
 
 
     useEffect(() => {
         for (let value of values) {
             if (value.id == valueID) {
+
+                let prumer = value.values.reduce((a, b) => a + b, 0) / value.values.length.toFixed(5)
+                let odchylka = getStandardDeviation(value.values).toFixed(5)
+
+
+                let vysledekZaokrouhleni = naJednoPlatne(odchylka)
+                let odchylkaZaokr = vysledekZaokrouhleni[0]
+                let prumerZaokr = zaokrouhli(prumer, vysledekZaokrouhleni[1], vysledekZaokrouhleni[2])
+
+
+
+
+
+
                 setHodnoty({
                     symbol: value.symbol,
                     jednotka: value.jednotka,
-                    prumer: value.values.reduce((a, b) => a + b, 0) / value.values.length,
-                    prumerZaokrouhleno: "Zaokr",
-                    odchylka: getStandardDeviation(value.values),
-                    odchylkaZaokrouhleno: 123465,
-                    toPosledniVProcentech: "aaa"
+                    prumer: prumer,
+                    prumerZaokrouhleno: prumerZaokr,
+                    odchylka: odchylka,
+                    odchylkaZaokrouhleno: odchylkaZaokr,
+                    toPosledniVProcentech: (odchylkaZaokr / prumerZaokr).toFixed(2)
                 })
+
+
             }
         }
 

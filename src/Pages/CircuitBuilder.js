@@ -42,7 +42,9 @@ function CircuitBuilder() {
 
     const [StartingPoint, setStartingPoint] = useState();
 
-    const [refresh, setRefresh] = useState();
+
+    const [updateLines, setUpdateLines] = useState();
+
 
     const components = [
         { name: "zarovka", title: "Žárovka", src: zarovkaImg },
@@ -150,6 +152,36 @@ function CircuitBuilder() {
         }
     }, []);
 
+    function deleteImage(imgID) {
+        console.log(imgID)
+
+        // Remove the picuture
+        let imgs = stageImages
+        for (let i = 0; i < imgs.length; i++) {
+            if (imgs[i].id == imgID) {
+                imgs.splice(i)
+                break
+            }
+        }
+
+        // Delete all lines, that connect to the picuture
+        let lines = stageLines
+        let outputLines = []
+        for (let line of lines) {
+            if (line.startImgID != imgID && line.endImgID != imgID) {
+                outputLines.push(line)
+            }
+        }
+
+        setStageImages(imgs)
+        setStageLines(outputLines)
+
+        // setL
+
+
+
+    }
+
     function getImgCoordinates(imgID) {
         for (let component of stageImages) {
             if (component.id == imgID) {
@@ -189,11 +221,12 @@ function CircuitBuilder() {
             console.warn(endImgID)
 
             // let endImgID = genNewStageComponentId("images")
-            setStageImages([...stageImages, { id: "" + genNewStageComponentId("images"), x: x, y: y, img: "bod", rotation: 0 }])
+            endImgID = "" + genNewStageComponentId("images")
+            setStageImages([...stageImages, { id: endImgID, x: y, y: x, img: "bod", rotation: 0 }])
             console.log(stageImages)
             endAlignX = 0
             endAlignY = 0
-            endDirection = "left"
+            endDirection = undefined
         } else {
             console.warn(endImgID)
         }
@@ -284,6 +317,12 @@ function CircuitBuilder() {
     }
 
 
+    // function setLinesAndUpdate(value) {
+    //     setStageLines(value)
+    // }
+
+
+
 
 
     return (<div>
@@ -354,9 +393,7 @@ function CircuitBuilder() {
 
 
         {/* Konva Canvas */}
-        <div className="uk-hidden">
-            {refresh}
-        </div>
+
         <div>
             <Stage width={window.innerWidth} height={window.innerHeight - 80 - 50} onWheel={(e) => handleWheelOnKonva(e)} draggable={true} scaleX={stageScale} scaleY={stageScale} style={{ background: "#fffbbf" }}>
                 <Layer>
@@ -367,7 +404,7 @@ function CircuitBuilder() {
 
                     {stageImages &&
                         stageImages.map(obj => {
-                            return <ImageComponent id={obj.id} x={obj.x} y={obj.y} setStartingPoint={setStartingPoint} activeImgID={activeImgID} setActiveImgID={setActiveImgID} setDrawingMode={setDrawingMode} DraggingBalls={stageDraggingBalls} setDraggingBalls={setStageDraggingBalls} img={obj.img} defaultRotation={obj.rotation} key={obj.id} saveIntoState={saveIntoState} drawMangattanLine={drawMangattanLine} triggerUnsaved={() => setIsSaved(false)} />
+                            return <ImageComponent deleteImage={deleteImage} setUpdateLines={setUpdateLines} id={obj.id} x={obj.x} y={obj.y} setStartingPoint={setStartingPoint} activeImgID={activeImgID} setActiveImgID={setActiveImgID} setDrawingMode={setDrawingMode} DraggingBalls={stageDraggingBalls} setDraggingBalls={setStageDraggingBalls} img={obj.img} defaultRotation={obj.rotation} key={obj.id} saveIntoState={saveIntoState} drawMangattanLine={drawMangattanLine} triggerUnsaved={() => setIsSaved(false)} />
                         })}
 
 
@@ -376,9 +413,10 @@ function CircuitBuilder() {
                             return <TextComponent id={obj.id} x={obj.x} y={obj.y} text={obj.value} key={obj.id} triggerUnsaved={() => setIsSaved(false)} />
                         })}
 
-                    {stageLines &&
+                    {(stageLines && stageImages) &&
                         stageLines.map(obj =>
                             <LineComponent
+                                setUpdateLines={setUpdateLines}
                                 startX={getImgCoordinates(obj.startImgID)[0]}
                                 startY={getImgCoordinates(obj.startImgID)[1]}
                                 startAlignX={obj.startAlignX}
@@ -393,7 +431,6 @@ function CircuitBuilder() {
                                 deleteLine={deleteLine}
 
                             />
-                            // return <Line id={obj.id} x={obj.startX} y={obj.startY} stroke="green" strokeWidth={9} points={[getImgCoordinates(obj.startImgID)[0], getImgCoordinates(obj.startImgID)[1], getImgCoordinates(obj.endImgID)[0], getImgCoordinates(obj.endImgID)[1]]} key={obj.id} />
                         )}
 
                     {(stageDraggingBalls && drawingMode) &&

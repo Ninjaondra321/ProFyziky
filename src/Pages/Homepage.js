@@ -8,56 +8,98 @@ function Homepage() {
     const protocol01Field = useRef();
 
     // var circuitFieldWidth = 100 // Number between 0-100 (%)
-    const [circuitFieldWidth, setCircuitFieldWidth] = useState(100);
+
+    const [CircuitStyle, setCircuitStyle] = useState();
+    const [CitcuitParentStyle, setCitcuitParentStyle] = useState();
+    const [protocol01Style, setProtocol01Style] = useState();
+    const [dataStyle, setdataStyle] = useState();
+    const [dataTileStyle, setDataTileStyle] = useState();
+
+
 
     const scrollHandler = _ => {
         let startPosition = -1 * startX.current.getBoundingClientRect().y + 80
-
         let windowHeight = window.innerHeight
-
-        console.log(startPosition)
+        let windowWidth = window.innerWidth
 
         let offsetOnStart = 150
-        setCircuitFieldWidth(100)
+
+
+
+        setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", background: "", zIndex: -1 })
+
+        setdataStyle({ display: "none", zIndex: -999 })
+
+
+
+        setCircuitStyle({ background: "purple", width: 100 + "vw", height: "calc(" + 100 + "vh - 80px)" })
+        setCitcuitParentStyle({ position: "absolute", left: "0", width: "100%", height: "calc(100vh - 80px)" })
 
 
         // Před
-        if (startPosition < 0 + offsetOnStart) {
-            setCircuitFieldWidth(100)
+        if (0 < startPosition && startPosition < 0 + offsetOnStart) {
+            setCircuitStyle({ background: "purple", width: 100 + "vw", height: "calc(" + 100 + "vh - 80px)" })
+            setCitcuitParentStyle({ position: "fixed", left: "0", right: "0", top: "80px", width: "100%", height: "calc(100vh - 80px)" })
+
+
         }
         // Obraz 01 - CIRCUITS
-        else if (windowHeight * 0 + offsetOnStart < startPosition && startPosition < windowHeight * 1) {
-            // let vysledek = 100 - ((startPosition - offsetOnStart) / (windowHeight) * 100) // Tohle funguje, ale je to linearní, takže nic extra
+        else if (offsetOnStart < startPosition) {
             let vysledek = 100 - ((startPosition - offsetOnStart) ** 2 / windowHeight ** 2 * 100)
-            // let vysledek = 100 - ((startPosition - offsetOnStart) ** 3 / windowHeight ** 3 * 100)
+            console.log(vysledek)
+            setCitcuitParentStyle({ position: "fixed", top: 80, left: "0", right: "0", width: "100%", height: "calc(100vh - 80px)" })
 
-            console.warn(vysledek)
-            if (0 < vysledek <= 100) {
-                setCircuitFieldWidth(vysledek)
-            } else if (100 < vysledek) {
-                setCircuitFieldWidth(100)
+
+
+            if (35 < vysledek && vysledek <= 100) {
+                setCircuitStyle({ background: "purple", width: vysledek + "vw", height: "calc(" + vysledek + "vh - 80px)" })
+                setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", position: "fixed", left: 0, top: 80 + vysledek, background: "pink", zIndex: -1 })
+            } else {
+                setCircuitStyle({ background: "purple", width: 35 + "vw", height: "calc(" + 35 + "vh - 80px)" })
             }
-            console.warn(circuitFieldWidth)
+
+            if (0 < vysledek && vysledek < 100) {
+                setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", position: "fixed", left: 0, top: 80 + vysledek, background: "pink", zIndex: -1 })
+            } else {
+                setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", position: "fixed", left: 0, top: 80, background: "pink", zIndex: -1 })
+
+            }
+
+            vysledek += 100
+
+            vysledek = 100 - ((startPosition - offsetOnStart * 2) ** 2 / windowHeight ** 2 * 100)
+
+            let distanceScrolled = -1 * vysledek * 2.5
+
+            console.warn(distanceScrolled)
+
+            // TODO: Tady jsem to zakomentoval abych nemusel resit commit issues, ale pls jeste si s tim pohraj. Díky ;-) - Ondra z minulosti 
+
+            // if ( 0 < distanceScrolled && distanceScrolled < ) {
+
+            if (distanceScrolled < windowWidth) {
+                setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", position: "fixed", left: -1 * distanceScrolled, top: 80, background: "pink", zIndex: -1 })
+                setCitcuitParentStyle({ position: "fixed", top: 80, left: -1 * distanceScrolled, right: "0", width: "100%", height: "calc(100vh - 80px)" })
+
+                setdataStyle({ position: "fixed", background: "yellow", top: 80, left: windowWidth + (-1 * distanceScrolled), right: "0", width: "100%", height: "calc(100vh - 80px)" })
+            } else {
+                setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", position: "fixed", left: - 1 * windowWidth, top: 80, background: "pink", zIndex: -1 })
+                setCitcuitParentStyle({ position: "fixed", top: 80, left: -1 * windowWidth, right: "0", width: "100%", height: "calc(100vh - 80px)" })
+                setdataStyle({ position: "fixed", background: "yellow", top: 80, left: 0, right: "0", width: "100%", height: "calc(100vh - 80px)" })
+            }
+            // }
+
+
         }
-        //  Obraz 02 - PROTOKOLY
-        else if (windowHeight * 1 < startPosition < windowHeight * 2) {
-
-            // setCircuitFieldWidth(15)
-
-
-        }
 
 
 
-        // if (circuitFieldY > windowHeight - 100) {
-        //     setCircuitFieldWidth("100")
 
-        // } else if (circuitFieldY < windowHeight) {
-        //     console.log('setting circuid field width')
-        //     console.log(circuitFieldY / window.innerHeight)
-        //     setCircuitFieldWidth(circuitFieldY / (window.innerHeight - 100) * 100)
-        // }
     };
+
+    // useEffect(() => {
+    //     setCircuitStyle({ background: "purple", width: circuitFieldWidth + "vw", height: "calc(" + circuitFieldWidth + "vh - 80px)" })
+    // }, [circuitFieldWidth]);
 
 
     useEffect(() => {
@@ -70,7 +112,7 @@ function Homepage() {
 
 
 
-    return (<div>
+    return (<div style={{ overflowX: "hidden" }}>
         <div className="uk-position-relative uk-container">
             <div className="uk-position-relative uk-container">
                 <h1 className="uk-heading-large">ProFyziky</h1>
@@ -102,8 +144,9 @@ function Homepage() {
 
 
             <h1 style={{ paddingBottom: "25px" }}>Taková menší ukázka
-                {/* <!-- &lt;3 --> */}
-                {":)"}
+                {/* {["<3", ":)"][Math.round(Math.random())]} */}
+                {" <3"}
+                {/* {":)"} */}
 
             </h1>
 
@@ -113,65 +156,38 @@ function Homepage() {
 
         <div className="homepage-start-y" ref={startX}></div>
 
-        <div className="center" style={{ width: "100vw", height: "calc(100vh - 80px)" }} uk-sticky="end: .homepage-protocol-01 ; offset: 80">
-            <div ref={circuitField} className="homepage-circuits" style={{ background: "purple", width: circuitFieldWidth + "vw", height: "calc(" + circuitFieldWidth + "vh - 80px)" }} >
+        <div className="center" style={CitcuitParentStyle} >
+            <div ref={circuitField} className="homepage-circuits" style={CircuitStyle} >
                 <h1>Ahhiashdio</h1>
                 <h1>Circuit</h1>
             </div>
         </div>
 
 
-        <div className="homepage-protocol-01" uk-sticky="end: .homepage-protocol-02 ; offset: 80" ref={protocol01Field} style={{ width: "100vw", height: "calc(100vh - 80px)", background: "blue" }}>
+
+        <div className="homepage-protocol-01" ref={protocol01Field} style={protocol01Style}>
+            assad
+        </div>
+
+        <div className="homepage-data" style={dataStyle}  >
+            <h1>Dataa</h1>
+            <div className="homepage-data-tile" style={dataTileStyle}>
+
+            </div>
 
         </div>
 
-        <div className="homepage-data" style={{ width: "100vw", height: "calc(100vh - 80px)", background: "yellow" }}>
-
-        </div>
-        <div className="homepage-protocol-02" ref={protocol01Field} style={{ width: "100vw", height: "calc(100vh - 80px)", background: "green" }}> </div>
+        {/* </div>
+        <div className="homepage-protocol-02" ref={protocol01Field} style={{ width: "100%", height: "calc(100vh - 80px)", background: "green", zIndex: -999 }} uk-sticky=" offset: 80" > </div> */}
 
 
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
+        <div style={{ height: "100vh" }}></div>
+        <div style={{ height: "100vh" }}></div>
+        <div style={{ height: "100vh" }}></div>
+        <div style={{ height: "100vh" }}></div>
+        <div style={{ height: "100vh" }}></div>
+        <div style={{ height: "100vh" }}></div>
 
-
-
-
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
-        <div className="uk-padding"></div>
 
 
         <Helmet>

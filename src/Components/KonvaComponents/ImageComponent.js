@@ -6,11 +6,13 @@ import sourceImgRaw from "../../Imgs/ElComponents/source.png"
 import zarovkaImgRaw from "../../Imgs/ElComponents/zarovka.png"
 import idkImgRaw from "../../Imgs/ElComponents/idk.png"
 import bodImgRaw from "../../Imgs/ElComponents/bod.png"
-import DraggingSurroundingBall from './DraggingSurroundingBall';
+import DraggingSurroundingBall from './DraggingSurroundingBall'
 
+
+import delte from "../../Imgs/delete.png"
 import rotate from "../../Imgs/rotate.png"
 
-function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, DraggingBalls, setDraggingBalls, setDrawingMode, id, defaultRotation, grid, triggerUnsaved, saveIntoState, setStartingPoint, drawMangattanLine }) {
+function ImageComponent({ deleteImage, setUpdateLines, x, y, img, imgLibrary, activeImgID, setActiveImgID, DraggingBalls, setDraggingBalls, setDrawingMode, id, defaultRotation, grid, triggerUnsaved, saveIntoState, setStartingPoint, drawMangattanLine }) {
     const [image01] = useImage(zarovkaImgRaw)
     const [hovno] = useImage(idkImgRaw)
     const [image] = useImage(sourceImgRaw)
@@ -24,6 +26,7 @@ function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, Dr
     const [isHovering, setIsHovering] = useState(false);
 
     const [rotateImage] = useImage(rotate)
+    const [delteImage] = useImage(delte)
 
     const [rotation, setRotation] = useState(defaultRotation);
 
@@ -138,6 +141,7 @@ function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, Dr
                 saveIntoState("images", id, Math.round(e.target.attrs.y / 50) * 50, Math.round(e.target.attrs.x / 50) * 50, img, rotation);
                 setPositionX(Math.round(e.target.attrs.x / 50) * 50);
                 setPositionY(Math.round(e.target.attrs.y / 50) * 50);
+                setUpdateLines(Math.random())
             }
             }
 
@@ -190,11 +194,19 @@ function ImageComponent({ x, y, img, imgLibrary, activeImgID, setActiveImgID, Dr
         }
 
         {(activeImgID == id) &&
-            <Image image={rotateImage} x={positionX + sourceImg.width} y={positionY - 15}
-                onClick={() => { setRotation(rotation + 90); saveIntoState("images", id, positionX, positionY, img, rotation); }}
-                onTap={() => { setRotation(rotation + 90); saveIntoState("images", id, positionX, positionY, img, rotation); }}
+            <>
+                <Image image={rotateImage} x={positionX + sourceImg.width} y={positionY - 15}
+                    onClick={() => { setRotation(rotation + 90); saveIntoState("images", id, positionX, positionY, img, rotation); }}
+                    onTap={() => { setRotation(rotation + 90); saveIntoState("images", id, positionX, positionY, img, rotation); }}
 
-            />
+                />
+                <Image image={delteImage} x={positionX + sourceImg.width} y={positionY - 15 + 50}
+                    onClick={() => deleteImage(id)}
+                    inTap={() => deleteImage(id)}
+                />
+
+
+            </>
 
         }
     </>

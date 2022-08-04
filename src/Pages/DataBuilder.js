@@ -306,7 +306,7 @@ function DataBuilder() {
                 }
 
 
-                <div>
+                <div className="uk-padding">
                     <div className="center">
 
                         <h2>+     New</h2>

@@ -2,8 +2,25 @@ import { Helmet } from "react-helmet";
 
 
 function Settings({ theme, setTheme, userAgreedToCookies, setUserAgreedToCookies }) {
-    console.log("theme")
-    console.log(theme)
+
+
+    function deleteSomething(type) {
+        switch (type) {
+            case "protocols":
+                localStorage.setItem('ProFyziky-Protocols', [])
+                break;
+            case "circuits":
+                localStorage.setItem('ProFyziky-Circuits', [])
+                break;
+            case "data":
+                localStorage.setItem('ProFyziky-Data', [])
+                break;
+
+            default:
+                break;
+        }
+    }
+
     return (<div className="uk-container uk-container-small uk-position-relative">
 
         <h1 className="uk-heading-small">Nastavení</h1>
@@ -11,18 +28,22 @@ function Settings({ theme, setTheme, userAgreedToCookies, setUserAgreedToCookies
         <h2>Data</h2>
         <h3>Místní úložiště</h3>
         <div className="uk-margin">
-            <button className="uk-button  uk-button-danger" style={{ color: "white" }}>Smazat včechny protokoly z tohoto počítače</button>
+            <button className="uk-button  uk-button-danger uk-width-full" style={{ color: "white" }} onClick={() => deleteSomething('protocols')} >Smazat včechny protokoly z tohoto počítače</button>
         </div>
 
         <div className="uk-margin">
-            <button className="uk-button uk-button-danger" style={{ color: "white" }}>Smazat všechny elektrické obvody z tohoto počítače</button>
+            <button className="uk-button uk-button-danger uk-width-full" style={{ color: "white" }} onClick={() => deleteSomething('circuits')} >Smazat všechny elektrické obvody z tohoto počítače</button>
+        </div>
+
+        <div className="uk-margin">
+            <button className="uk-button uk-button-danger uk-width-full" style={{ color: "white" }} onClick={() => deleteSomething('data')} >Smazat všechna políčka s daty z tohoto počítače</button>
         </div>
 
         <h3>Cookies</h3>
         <div>
             <label><input class="uk-checkbox" type="checkbox" checked={false} disabled /> &nbsp; <b> Základní cookies</b> (aplikace místo nich využívá localhost)</label>
             <br />
-            <label><input class="uk-checkbox" type="checkbox" value={userAgreedToCookies} onChange={(e) => setUserAgreedToCookies(e.target.checked)} /> &nbsp; <b>Statistické cookies</b> (sbírání dat pro vylepšení webu)</label>
+            <label><input class="uk-checkbox" type="checkbox" checked={userAgreedToCookies} onChange={(e) => setUserAgreedToCookies(e.target.checked)} /> &nbsp; <b>Statistické cookies</b> (sbírání dat pro vylepšení webu)</label>
             <br />
             <label><input class="uk-checkbox" type="checkbox" checked={false} disabled /> &nbsp;<b>Marketingové cookies</b> (aplikace reklamy nezobrazuje)</label>
             <br />

@@ -3,7 +3,7 @@ import { constants } from 'buffer';
 import { Stage, Layer, Rect, Text, Circle, Line, Image } from 'react-konva';
 
 
-function LineComponent({ startX, startY, startAlignX, startAlignY, startDirection, endX, endY, endAlignX, endAlignY, endDirection, id, deleteLine }) {
+function LineComponent({ setUpdateLines, startX, startY, startAlignX, startAlignY, startDirection, endX, endY, endAlignX, endAlignY, endDirection, id, deleteLine }) {
 
     const start = [startY + startAlignX, startX + startAlignY,]
     const end = [endY + endAlignX, endX + endAlignY]
@@ -25,6 +25,16 @@ function LineComponent({ startX, startY, startAlignX, startAlignY, startDirectio
     }
 
     function findMidPoints() {
+        // if connected to a "bod" or "uzel"
+        if (endDirection == undefined || endDirection == null) {
+            if (["left", "right"].includes(startDirection)) {
+                return [end[0], start[1]]
+            } else {
+                return [start[0], end[1]]
+
+            }
+        }
+
         // Check if in line
         if (
             (start[0] + parseInt(updateFromDirection(startDirection)[0]) == end[0] + parseInt(updateFromDirection(endDirection)[0]))
@@ -60,6 +70,11 @@ function LineComponent({ startX, startY, startAlignX, startAlignY, startDirectio
             &&
             (updateFromDirection(endDirection)[0] == 0)
         ) {
+            if (updateFromDirection(startDirection)[1] == updateFromDirection(endDirection)[1]) {
+                // TODO: tadyy
+                return []
+                // return [start[0] + parseInt(updateFromDirection(startDirection)[0]), end[1] + parseInt(updateFromDirection(endDirection)[1])]
+            }
             return [
                 start[0], (start[1] + end[1]) / 2,
                 end[0], (start[1] + end[1]) / 2,
@@ -72,9 +87,9 @@ function LineComponent({ startX, startY, startAlignX, startAlignY, startDirectio
             &&
             (updateFromDirection(endDirection)[1] == 0)
         ) {
-            console.log(end[0])
-            console.log(start[0])
-            console.log(end[0] - start[0])
+            if (updateFromDirection(startDirection)[0] == updateFromDirection(endDirection)[0]) {
+                // return [end[0], start[1] + parseInt(updateFromDirection(startDirection)[1]),]
+            }
 
             return [
                 (end[0] + start[0]) / 2, start[1],
@@ -110,8 +125,8 @@ function LineComponent({ startX, startY, startAlignX, startAlignY, startDirectio
 
             ]}
 
-            onDblClick={() => deleteLine(id)}
-            onDblTap={() => deleteLine(id)}
+            onDblClick={() => { deleteLine(id); setUpdateLines(Math.random()) }}
+            onDblTap={() => { deleteLine(id); setUpdateLines(Math.random()) }}
 
             stroke="black"
             strokeWidth={9}
