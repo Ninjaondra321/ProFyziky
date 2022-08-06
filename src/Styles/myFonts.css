@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'MyWebFont';
+    src: url('../Fonts/Alien_Hieroglyph.ttf');
+    /* IE9 Compat Modes */
+}
+
+* {
+    font-family: "MyWebFont" !important;
+}

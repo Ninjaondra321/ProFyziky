@@ -30,10 +30,15 @@ import ImageResize from 'quill-image-resize-module-react';
 
 
 
+
+
+
 window.katex = katex;
 
 
 Quill.register('modules/imageResize', ImageResize);
+
+
 
 
 
@@ -64,6 +69,8 @@ function ProtocolBuilder() {
     // Section: Hlavní část
     const [hlavniCast, setHlavniCast] = useState("");
     const hlavniCastQuill = useRef();
+
+    const A4page = useRef()
 
 
     // Section: Závěr
@@ -294,12 +301,23 @@ function ProtocolBuilder() {
     }
 
     function download() {
+
         var printWindow = window.open('', '', 'popup=true');
-        printWindow.document.write('<html><head><title>' + fileName + '</title></head><body >');
-        printWindow.document.write('AHooooj');
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
+        // printWindow.document.write('<html><head><title>' + fileName + '</title></head>');
+        // printWindow.document.write('AHooooj');
+        // printWindow.document.write('</html>');
+
+        console.log(A4page.current.innerHTML)
+
+        let html = A4page.current.innerHTML
+
+        printWindow.document.write('<html><head><title>' + fileName + '</title></head>');
+        printWindow.document.write(html);
+        printWindow.document.write('</html>');
+
+
         printWindow.print();
+        printWindow.document.close();
 
 
     }
@@ -308,7 +326,6 @@ function ProtocolBuilder() {
 
     return (<div>
         {/* SubNavBar */}
-
         <div className="subnavbar">
 
             <div className="left">
@@ -730,7 +747,6 @@ function ProtocolBuilder() {
 
                     </div>
                 }
-
                 {/* END Vzhled section */}
 
             </div>
@@ -738,7 +754,7 @@ function ProtocolBuilder() {
 
             <div className="right uk-padding uk-visible@m uk-light " >
 
-                <div className="A4 uk-box-shadow-xlarge">
+                <div ref={A4page} className="A4 uk-box-shadow-xlarge">
 
                     <div className="okno-parent center">
 
@@ -837,15 +853,7 @@ function ProtocolBuilder() {
         <Helmet>
             <title>ProFyziky | Tvorba el. schémat</title>
 
-            {/* <script type="text/javascript">
-                {`
-                window.addEventListener('beforeunload', function (e) {
-                    e.preventDefault();
-                    e.returnValue = '';
-                });
-                
-                `}
-            </script> */}
+
 
         </Helmet>
 

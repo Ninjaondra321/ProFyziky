@@ -20,10 +20,10 @@ import DataBuilder from './Pages/DataBuilder';
 
 // Components
 import NavBar from './Components/NavBar';
-import "./Styles/ui-kit-z-webu.css"
 import InitialSettings from './Components/InitialSettings';
 import Analytics from './Analytics/Analytics';
 
+import "./Styles/ui-kit-z-webu.css"
 
 
 function App() {
