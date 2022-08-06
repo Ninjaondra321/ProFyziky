@@ -8,6 +8,17 @@ import idkImgRaw from "../../Imgs/ElComponents/idk.png"
 import bodImgRaw from "../../Imgs/ElComponents/bod.png"
 import DraggingSurroundingBall from './DraggingSurroundingBall'
 
+import ampermetr from "../../Imgs/ElComponents/ampermetr.png"
+import dioda from "../../Imgs/ElComponents/dioda.png"
+import motor from "../../Imgs/ElComponents/motor.png"
+import rezistor from "../../Imgs/ElComponents/rezistor.png"
+import stridavy from "../../Imgs/ElComponents/stridavy.png"
+import voltmetr from "../../Imgs/ElComponents/voltmetr.png"
+import zdroj from "../../Imgs/ElComponents/zdroj.png"
+import uzel from "../../Imgs/ElComponents/uzel.png"
+import zdrojj from "../../Imgs/ElComponents/zdrojj.png"
+import zvonek from "../../Imgs/ElComponents/zvonek.png"
+
 
 import delte from "../../Imgs/delete.png"
 import rotate from "../../Imgs/rotate.png"
@@ -17,6 +28,22 @@ function ImageComponent({ deleteImage, setUpdateLines, x, y, img, imgLibrary, ac
     const [hovno] = useImage(idkImgRaw)
     const [image] = useImage(sourceImgRaw)
     const [bod] = useImage(bodImgRaw)
+
+    // console.warn(deleteImage, setUpdateLines, x, y, img, activeImgID, setActiveImgID, DraggingBalls, setDraggingBalls, setDrawingMode, id, defaultRotation, grid, triggerUnsaved, saveIntoState, setStartingPoint, drawMangattanLine)
+
+
+    const [ampermetrIMG] = useImage(ampermetr)
+    const [diodaIMG] = useImage(dioda)
+    const [motorIMG] = useImage(motor)
+    const [rezistorIMG] = useImage(rezistor)
+    const [stridavyIMG] = useImage(stridavy)
+    const [voltmetrIMG] = useImage(voltmetr)
+    const [zdrojIMG] = useImage(zdroj)
+    const [uzelIMG] = useImage(uzel)
+    const [zdrojjIMG] = useImage(zdrojj)
+    const [zvonekIMG] = useImage(zvonek)
+
+
 
     const [positionX, setPositionX] = useState(y);
     const [positionY, setPositionY] = useState(x);
@@ -33,10 +60,14 @@ function ImageComponent({ deleteImage, setUpdateLines, x, y, img, imgLibrary, ac
 
     var sourceImg = null
 
+
+
+
+    x = Math.round(x / 50) * 50
+    y = Math.round(y / 50) * 50
+
     switch (img) {
-        case "zdroj":
-            sourceImg = image
-            break;
+
 
         case "zarovka":
             sourceImg = image01
@@ -46,20 +77,61 @@ function ImageComponent({ deleteImage, setUpdateLines, x, y, img, imgLibrary, ac
             sourceImg = bod
             break;
 
+        case "ampermetr":
+            sourceImg = ampermetrIMG
+            break;
+
+        case "dioda":
+            sourceImg = diodaIMG
+            break;
+
+        case "motor":
+            sourceImg = motorIMG
+            break;
+
+        case "rezistor":
+            sourceImg = rezistorIMG
+            break;
+
+        case "stridavy":
+            sourceImg = stridavyIMG
+            break;
+
+        case "voltmetr":
+            sourceImg = voltmetrIMG
+            break;
+
+        case "zdroj":
+            sourceImg = zdrojIMG
+            break;
+
+        case "uzel":
+            sourceImg = uzelIMG
+            break;
+
+        case "zdrojj":
+            sourceImg = zdrojjIMG
+            break;
+
+        case "zvonek":
+            sourceImg = zvonekIMG
+            break;
+
+
 
         default:
             sourceImg = hovno
             break;
     }
 
-    x = Math.round(x / 50) * 50
-    y = Math.round(y / 50) * 50
-
 
     useEffect(() => {
+
+
+
         try {
-            let coundOnY = Math.ceil(sourceImg.width / grid)
-            let coundOnX = Math.ceil(sourceImg.height / grid)
+            // let coundOnY = Math.ceil(sourceImg.width / grid)
+            // let coundOnX = Math.ceil(sourceImg.height / grid)
 
             let BallsList = []
             // for (let i = 0; i < coundOnX + 1; i++) {
@@ -107,6 +179,7 @@ function ImageComponent({ deleteImage, setUpdateLines, x, y, img, imgLibrary, ac
         setRotation(rotation - 360)
     }
 
+
     function adjuctCoordinates() {
         try {
 
@@ -128,6 +201,14 @@ function ImageComponent({ deleteImage, setUpdateLines, x, y, img, imgLibrary, ac
             return [0, 0]
         }
 
+    }
+
+    function getWidth() {
+        try {
+            return sourceImg.width
+        } catch {
+            return 0
+        }
     }
 
 
@@ -195,12 +276,12 @@ function ImageComponent({ deleteImage, setUpdateLines, x, y, img, imgLibrary, ac
 
         {(activeImgID == id) &&
             <>
-                <Image image={rotateImage} x={positionX + sourceImg.width} y={positionY - 15}
+                <Image image={rotateImage} x={positionX + getWidth()} y={positionY - 15}
                     onClick={() => { setRotation(rotation + 90); saveIntoState("images", id, positionX, positionY, img, rotation); }}
                     onTap={() => { setRotation(rotation + 90); saveIntoState("images", id, positionX, positionY, img, rotation); }}
 
                 />
-                <Image image={delteImage} x={positionX + sourceImg.width} y={positionY - 15 + 50}
+                <Image image={delteImage} x={positionX + getWidth()} y={positionY - 15 + 50}
                     onClick={() => deleteImage(id)}
                     inTap={() => deleteImage(id)}
                 />

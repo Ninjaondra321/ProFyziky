@@ -13,11 +13,9 @@ function Data() {
             localStorage.setItem('ProFyziky-Data', l)
         }
 
-        console.log('Setting data')
         setData(JSON.parse(l))
     }, []);
 
-    console.log(Data)
 
     function getNewID() {
         if (!Data) {
@@ -25,10 +23,7 @@ function Data() {
         }
         let listOdIDs = []
 
-        // Data.map(obj => { listOdIDs.push(obj.id) })
-
         let dataCopy = Data
-        console.log(dataCopy)
         for (let obj of dataCopy) {
             listOdIDs.push(obj.id)
         }
@@ -36,7 +31,7 @@ function Data() {
 
         let testingID = 0
         while (true) {
-            if (!listOdIDs.includes(testingID)) {
+            if (!listOdIDs.includes('' + testingID)) {
                 return testingID
             }
             testingID += 1

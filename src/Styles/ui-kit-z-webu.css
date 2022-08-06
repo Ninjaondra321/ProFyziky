@@ -11754,3 +11754,7 @@ animation-fill-mode: both;
 }
 
 */
+
+.moje-grid-margin {
+    margin-left: 0 !important;
+}

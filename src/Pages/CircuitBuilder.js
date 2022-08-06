@@ -14,6 +14,17 @@ import TextComponent from "../Components/KonvaComponents/TextComponent";
 import LineComponent from "../Components/KonvaComponents/LineComponent";
 import DraggingSurroundingBall from "../Components/KonvaComponents/DraggingSurroundingBall";
 
+import ampermetr from "../Imgs/ElComponents/ampermetr.png"
+import dioda from "../Imgs/ElComponents/dioda.png"
+import motor from "../Imgs/ElComponents/motor.png"
+import rezistor from "../Imgs/ElComponents/rezistor.png"
+import stridavy from "../Imgs/ElComponents/stridavy.png"
+import voltmetr from "../Imgs/ElComponents/voltmetr.png"
+import zdroj from "../Imgs/ElComponents/zdroj.png"
+import uzel from "../Imgs/ElComponents/uzel.png"
+import zdrojj from "../Imgs/ElComponents/zdrojj.png"
+import zvonek from "../Imgs/ElComponents/zvonek.png"
+
 
 function CircuitBuilder() {
     let { projectName } = useParams()
@@ -49,7 +60,16 @@ function CircuitBuilder() {
     const components = [
         { name: "zarovka", title: "Žárovka", src: zarovkaImg },
         { name: "bod", title: "Bod", src: bodImg },
-        { name: "zdroj", title: "Zdroj", src: sourceImg },
+        { name: "ampermetr", title: "Zdroj", src: ampermetr },
+        { name: "dioda", title: "Zdroj", src: dioda },
+        { name: "motor", title: "Zdroj", src: motor },
+        { name: "rezistor", title: "Zdroj", src: rezistor },
+        { name: "stridavy", title: "Zdroj", src: stridavy },
+        { name: "voltmetr", title: "Zdroj", src: voltmetr },
+        { name: "zdroj", title: "Zdroj", src: zdroj },
+        { name: "uzel", title: "Zdroj", src: uzel },
+        { name: "zdrojj", title: "Zdroj", src: zdrojj },
+        { name: "zvonek", title: "Zdroj", src: zvonek },
     ]
 
 
@@ -155,12 +175,29 @@ function CircuitBuilder() {
     function deleteImage(imgID) {
         console.log(imgID)
 
+        console.log(stageImages)
+        console.log(stageLines)
+
         // Remove the picuture
         let imgs = stageImages
+
+        console.debug(stageImages)
+        console.debug(imgs)
+
+
+
+
         for (let i = 0; i < imgs.length; i++) {
             if (imgs[i].id == imgID) {
                 imgs.splice(i)
                 break
+            }
+        }
+
+        let outputImages = []
+        for (let img of stageImages) {
+            if (img.id !== imgID) {
+                outputImages.push(img)
             }
         }
 
@@ -173,10 +210,15 @@ function CircuitBuilder() {
             }
         }
 
+        console.log(imgs)
+        console.log(outputLines)
+
+        console.debug(outputImages)
+        console.debug(imgs)
+        console.debug(imgs == outputImages)
+
         setStageImages(imgs)
         setStageLines(outputLines)
-
-        // setL
 
 
 
@@ -188,6 +230,9 @@ function CircuitBuilder() {
                 return [component.x, component.y]
             }
         }
+
+        return [0, 0]
+
 
     }
 
@@ -322,7 +367,7 @@ function CircuitBuilder() {
     // }
 
 
-
+    console.debug(stageImages)
 
 
     return (<div>
@@ -403,9 +448,9 @@ function CircuitBuilder() {
                 <Layer ref={layer}>
 
                     {stageImages &&
-                        stageImages.map(obj => {
-                            return <ImageComponent deleteImage={deleteImage} setUpdateLines={setUpdateLines} id={obj.id} x={obj.x} y={obj.y} setStartingPoint={setStartingPoint} activeImgID={activeImgID} setActiveImgID={setActiveImgID} setDrawingMode={setDrawingMode} DraggingBalls={stageDraggingBalls} setDraggingBalls={setStageDraggingBalls} img={obj.img} defaultRotation={obj.rotation} key={obj.id} saveIntoState={saveIntoState} drawMangattanLine={drawMangattanLine} triggerUnsaved={() => setIsSaved(false)} />
-                        })}
+                        stageImages.map(obj =>
+                            <ImageComponent deleteImage={deleteImage} setUpdateLines={setUpdateLines} id={obj.id} x={obj.x} y={obj.y} setStartingPoint={setStartingPoint} activeImgID={activeImgID} setActiveImgID={setActiveImgID} setDrawingMode={setDrawingMode} DraggingBalls={stageDraggingBalls} setDraggingBalls={setStageDraggingBalls} img={obj.img} defaultRotation={obj.rotation} key={obj.id} saveIntoState={saveIntoState} drawMangattanLine={drawMangattanLine} triggerUnsaved={() => setIsSaved(false)} />
+                        )}
 
 
                     {stageTexts &&
@@ -415,6 +460,8 @@ function CircuitBuilder() {
 
                     {(stageLines && stageImages) &&
                         stageLines.map(obj =>
+
+
                             <LineComponent
                                 setUpdateLines={setUpdateLines}
                                 startX={getImgCoordinates(obj.startImgID)[0]}
@@ -429,8 +476,9 @@ function CircuitBuilder() {
                                 endDirection={obj.endDirection}
                                 id={obj.id}
                                 deleteLine={deleteLine}
-
                             />
+
+
                         )}
 
                     {(stageDraggingBalls && drawingMode) &&

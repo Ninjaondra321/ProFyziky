@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
 import { useEffect, useRef, useState, useMemo } from 'react';
+import { Link } from "react-router-dom";
 
 function Homepage() {
 
@@ -75,19 +76,19 @@ function Homepage() {
 
             // TODO: Tady jsem to zakomentoval abych nemusel resit commit issues, ale pls jeste si s tim pohraj. Díky ;-) - Ondra z minulosti 
 
-            // if ( 0 < distanceScrolled && distanceScrolled < ) {
+            if (0 < distanceScrolled && distanceScrolled < windowHeight * 2) {
 
-            if (distanceScrolled < windowWidth) {
-                setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", position: "fixed", left: -1 * distanceScrolled, top: 80, background: "pink", zIndex: -1 })
-                setCitcuitParentStyle({ position: "fixed", top: 80, left: -1 * distanceScrolled, right: "0", width: "100%", height: "calc(100vh - 80px)" })
+                if (distanceScrolled < windowWidth) {
+                    setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", position: "fixed", left: -1 * distanceScrolled, top: 80, background: "pink", zIndex: -1 })
+                    setCitcuitParentStyle({ position: "fixed", top: 80, left: -1 * distanceScrolled, right: "0", width: "100%", height: "calc(100vh - 80px)" })
 
-                setdataStyle({ position: "fixed", background: "yellow", top: 80, left: windowWidth + (-1 * distanceScrolled), right: "0", width: "100%", height: "calc(100vh - 80px)" })
-            } else {
-                setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", position: "fixed", left: - 1 * windowWidth, top: 80, background: "pink", zIndex: -1 })
-                setCitcuitParentStyle({ position: "fixed", top: 80, left: -1 * windowWidth, right: "0", width: "100%", height: "calc(100vh - 80px)" })
-                setdataStyle({ position: "fixed", background: "yellow", top: 80, left: 0, right: "0", width: "100%", height: "calc(100vh - 80px)" })
+                    setdataStyle({ position: "fixed", background: "yellow", top: 80, left: windowWidth + (-1 * distanceScrolled), right: "0", width: "100%", height: "calc(100vh - 80px)" })
+                } else {
+                    setProtocol01Style({ width: "100%", height: "calc(100vh - 80px)", position: "fixed", left: - 1 * windowWidth, top: 80, background: "pink", zIndex: -1 })
+                    setCitcuitParentStyle({ position: "fixed", top: 80, left: -1 * windowWidth, right: "0", width: "100%", height: "calc(100vh - 80px)" })
+                    setdataStyle({ position: "fixed", background: "yellow", top: 80, left: 0, right: "0", width: "100%", height: "calc(100vh - 80px)" })
+                }
             }
-            // }
 
 
         }
@@ -120,22 +121,22 @@ function Homepage() {
 
                 <div className="uk-childer-width-1-3@s uk-grid" uk-grid="">
                     <div className="uk-margin uk-padding">
-                        <div className="uk-card uk-card-primary uk-card-hover uk-card-body uk-margin">
-                            <img src="/nazorny_obvod.png" alt="s" />
+                        <Link className="uk-card uk-card-primary uk-card-hover uk-card-body uk-margin" to="/circuits">
+                            <img src="../Imgs/nazorny_obvod.png" alt="s" />
                             <h2>Elektrická schémata</h2>
-                        </div>
+                        </Link>
                     </div>
                     <div className="uk-margin uk-padding">
-                        <div className="uk-card uk-card-primary uk-card-hover uk-card-body uk-margin">
+                        <Link className="uk-card uk-card-primary uk-card-hover uk-card-body uk-margin" to="/protocols">
                             <img src="/nazorny_obvod.png" alt="s" />
                             <h2>Protokoly</h2>
-                        </div>
+                        </Link>
                     </div>
                     <div className="uk-margin uk-padding">
-                        <div className="uk-card uk-card-primary uk-card-hover uk-card-body uk-margin">
+                        <Link className="uk-card uk-card-primary uk-card-hover uk-card-body uk-margin" to="/data">
                             <img src="/nazorny_obvod.png" alt="s" />
                             <h2>Data</h2>
-                        </div>
+                        </Link>
                     </div>
 
 

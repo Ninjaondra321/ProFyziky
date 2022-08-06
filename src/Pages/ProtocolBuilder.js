@@ -70,7 +70,7 @@ function ProtocolBuilder() {
     const [zaver, setZaver] = useState("");
 
 
-    const [ActiveSection, setActiveSection] = useState("hlava");
+    const [ActiveSection, setActiveSection] = useState("vzhled");
 
     const [mathQuillIsSetted, setMathQuillIsSetted] = useState(false);
 
@@ -246,20 +246,9 @@ function ProtocolBuilder() {
 
     }
 
-
-
-
-
-
     useEffect(() => {
         setIsSaved(false)
     }, [fileName, userName, userColeague, userClass, userDate, nadpis, nadNadpis, pomucky, hlavniCast, zaver]);
-
-
-
-
-
-
 
     function extendTextFromBadge(variable, setVariable, value) {
         let text = variable
@@ -302,6 +291,17 @@ function ProtocolBuilder() {
             output += part
         }
         return output
+    }
+
+    function download() {
+        var printWindow = window.open('', '', 'popup=true');
+        printWindow.document.write('<html><head><title>' + fileName + '</title></head><body >');
+        printWindow.document.write('AHooooj');
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+
+
     }
 
 
@@ -653,13 +653,16 @@ function ProtocolBuilder() {
                                         <option value="google">Google</option>
                                         <option value="microsoft">Microsoft</option>
                                         <option value="vlastni">Vlastní</option>
-
                                     </select>
+
                                     <button className="uk-button uk-button-default" type="button" tabindex="-1">
                                         <span></span>
                                         <span uk-icon="icon: chevron-down"></span>
                                     </button>
+
                                 </div>
+                                <input type="number" className="uk-input" />
+                                <input type="color" className="uk-input" />
 
                                 <div className="uk-margin uk-flex">
                                     <div>
@@ -721,7 +724,7 @@ function ProtocolBuilder() {
 
                         <div className=" uk-flex" style={{ justifyContent: "space-between", paddingLeft: "50px" }}>
                             <button className="uk-button uk-button-default" onClick={() => setActiveSection("zaver")}>{"<--"} Předchozí  </button>
-                            <button className="uk-button uk-button-danger" onClick={() => console.log('Stahujte TEĎ.')}>Stáhnout PDF</button>
+                            <button className="uk-button uk-button-danger" onClick={() => download()}>Stáhnout PDF</button>
                         </div>
 
 
