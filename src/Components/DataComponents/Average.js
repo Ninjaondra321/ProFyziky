@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Average({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
+function Average({ values, deleteTile, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
     // Tady je tileContent jenom string s hodnotou valueID
 
 
@@ -167,14 +167,14 @@ function Average({ values, setTiles, tiles, tileContent, tileID, setFullscreenID
                         <span uk-icon="shrink" onClick={() => setFullscreenID(false)} ></span>
                     }
                     {fullscreenID != tileID &&
-                        <span uk-icon="expand" onClick={() => { console.log('asdas'); setFullscreenID(tileID) }}></span>
+                        <span uk-icon="expand" onClick={() => { setFullscreenID(tileID) }}></span>
                     }
 
                     <span uk-icon="more-vertical"></span>
 
                     <div uk-dropdown="mode: click">
 
-                        <a><span uk-icon="trash"></span>Odstranit kachličku</a>
+                        <a onClick={() => deleteTile(tileID)}><span uk-icon="trash"></span>Odstranit kachličku</a>
 
                     </div>
 

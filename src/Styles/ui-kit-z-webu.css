@@ -11490,7 +11490,7 @@ textarea {
     position: absolute;
     right: 0;
     top: 0;
-    width: 100%;
+    width: 100% !important;
     cursor: pointer;
 
 }
@@ -11606,10 +11606,10 @@ textarea {
     height: 60px !important;
 }
 
-
+/* 
 .quill>.ql-toolbar:first-child {
     display: none !important;
-}
+} */
 
 
 .cookies-moje {
@@ -11662,7 +11662,7 @@ body {
 
 .uk-tile-primary .uk-input,
 .uk-tile-primary .uk-select {
-    color: white !important;
+    color: white;
 }
 
 
@@ -11757,4 +11757,16 @@ animation-fill-mode: both;
 
 .moje-grid-margin {
     margin-left: 0 !important;
+}
+
+
+/* .protocols-workspace .left * {
+    position: sticky;
+    top: 165px;
+
+} */
+
+.uk-form-danger {
+    color: #f0506e !important;
+    border-color: #f0506e !important;
 }

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Link, useLinkClickHandler } from "react-router-dom"
 import { Helmet } from "react-helmet";
 
+import { useNavigate } from "react-router-dom";
 
 function Protocols() {
     // const [UserName, setUserName] = useState();
@@ -15,6 +16,11 @@ function Protocols() {
     const [UserClass, setUserClass] = useState();
 
     const [Projects, setProjects] = useState();
+
+    const [formFirstNameIsOK, setFormFirstNameIsOK] = useState(true);
+    const [formLastNameIsOK, setFormLastNameIsOK] = useState(true);
+    const [formCoworkerIdOK, setFormCoworkerIdOK] = useState(true);
+    const [formClassIsOK, setformClassIsOK] = useState(true);
 
 
     function saveInformation() {
@@ -86,6 +92,34 @@ function Protocols() {
 
     }
 
+    let navigate = useNavigate();
+
+    function validateFormAndRedirect() {
+        let isValid = true
+        if (!UserFirstName) {
+            setFormFirstNameIsOK(false)
+            isValid = false
+        }
+        if (!userLastName) {
+            setFormLastNameIsOK(false)
+            isValid = false
+        }
+        if (!UserClass) {
+            setformClassIsOK(false)
+            isValid = false
+        }
+        if (!UserCoworker) {
+            setFormCoworkerIdOK(false)
+            isValid = false
+        }
+
+        if (isValid) {
+            navigate("./" + generateNewId(), { replace: true });
+
+        }
+
+    }
+
 
     return (<div className="uk-container">
 
@@ -104,7 +138,7 @@ function Protocols() {
 
                         <label className="uk-form-label" for="form-stacked-text" >Křestní jméno</label>
                         <div className="uk-form-controls ">
-                            <input className="uk-input" id="form-stacked-text" value={UserFirstName} onBlur={() => saveInformation()} onChange={(e) => setUserFirstName(e.target.value)} type="text" placeholder="Evženie" />
+                            <input className={formFirstNameIsOK ? "uk-input" : "uk-input uk-form-danger"} id="form-stacked-text" value={UserFirstName} onBlur={() => saveInformation()} onChange={(e) => { setUserFirstName(e.target.value); setFormFirstNameIsOK(true) }} type="text" placeholder="Evženie" />
                         </div>
                     </div>
 
@@ -112,7 +146,7 @@ function Protocols() {
 
                         <label className="uk-form-label" for="form-stacked-text" >Příjmení</label>
                         <div className="uk-form-controls">
-                            <input className="uk-input" id="form-stacked-text" value={userLastName} onBlur={() => saveInformation()} onChange={(e) => setUserLastName(e.target.value)} type="text" placeholder="Svíčková" />
+                            <input className={formLastNameIsOK ? "uk-input" : "uk-input uk-form-danger"} id="form-stacked-text" value={userLastName} onBlur={() => saveInformation()} onChange={(e) => { setUserLastName(e.target.value); setFormLastNameIsOK(true) }} type="text" placeholder="Svíčková" />
                         </div>
                     </div>
 
@@ -122,7 +156,7 @@ function Protocols() {
                 <div className="uk-margin">
                     <label className="uk-form-label" for="form-stacked-text">Kolega</label>
                     <div className="uk-form-controls">
-                        <input className="uk-input" id="form-stacked-text" type="text" placeholder="Ohnislav Guláš" onBlur={() => saveInformation()} value={UserCoworker} onChange={(e) => setUserCoworker(e.target.value)} />
+                        <input className={formCoworkerIdOK ? "uk-input" : "uk-input uk-form-danger"} id="form-stacked-text" type="text" placeholder="Ohnislav Guláš" onBlur={() => saveInformation()} value={UserCoworker} onChange={(e) => { setUserCoworker(e.target.value); setFormCoworkerIdOK(true) }} />
                     </div>
                 </div>
 
@@ -141,13 +175,14 @@ function Protocols() {
                     <div className="  uk-width-2-5" style={{ paddingLeft: "20px" }}>
                         <label className="uk-form-label" for="form-stacked-text">Třída, skupina</label>
                         <div className="uk-form-controls">
-                            <input className="uk-input" id="form-stacked-text" type="text" placeholder="2A,A" onBlur={() => saveInformation()} value={UserClass} onChange={(e) => setUserClass(e.target.value)} />
+                            <input className={formClassIsOK ? "uk-input" : "uk-input uk-form-danger"} id="form-stacked-text" type="text" placeholder="2A,A" onBlur={() => saveInformation()} value={UserClass} onChange={(e) => { setUserClass(e.target.value); setformClassIsOK(true) }} />
                         </div>
                     </div>
                 </div>
 
                 <div className="uk-margin ">
-                    <Link className=" uk-button uk-button-default" to={"/protocols/" + generateNewId()} >Vytvořit protokol</Link>
+                    {/* <Link className=" uk-button uk-button-default" to={"/protocols/" + generateNewId()} >Vytvořit protokol</Link> */}
+                    <button className="uk-button uk-button-default" onClick={() => validateFormAndRedirect()} > Vytvořit protokol</button>
                 </div>
 
 

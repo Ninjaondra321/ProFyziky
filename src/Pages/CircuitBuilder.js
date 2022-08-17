@@ -25,6 +25,8 @@ import uzel from "../Imgs/ElComponents/uzel.png"
 import zdrojj from "../Imgs/ElComponents/zdrojj.png"
 import zvonek from "../Imgs/ElComponents/zvonek.png"
 
+import FocusMode from "../Components/components-focusMode";
+
 
 function CircuitBuilder() {
     let { projectName } = useParams()
@@ -35,9 +37,9 @@ function CircuitBuilder() {
 
     const [ComponentsFilter, setComponentsFilter] = useState('');
 
-    const [stageImages, setStageImages] = useState();
-    const [stageLines, setStageLines] = useState();
-    const [stageTexts, setStageTexts] = useState();
+    const [stageImages, setStageImages] = useState([]);
+    const [stageLines, setStageLines] = useState([]);
+    const [stageTexts, setStageTexts] = useState([]);
 
     const [drawingMode, setDrawingMode] = useState(false);
 
@@ -53,23 +55,28 @@ function CircuitBuilder() {
 
     const [StartingPoint, setStartingPoint] = useState();
 
+    const [focusModeIsOn, setFocusModeIsOn] = useState(false);
 
     const [updateLines, setUpdateLines] = useState();
 
+    const stageRef = useRef(null)
+
+    console.log(stageRef)
+
 
     const components = [
+        { name: "zdroj", title: "Zdroj", src: zdroj },
         { name: "zarovka", title: "Žárovka", src: zarovkaImg },
         { name: "bod", title: "Bod", src: bodImg },
-        { name: "ampermetr", title: "Zdroj", src: ampermetr },
-        { name: "dioda", title: "Zdroj", src: dioda },
-        { name: "motor", title: "Zdroj", src: motor },
-        { name: "rezistor", title: "Zdroj", src: rezistor },
-        { name: "stridavy", title: "Zdroj", src: stridavy },
-        { name: "voltmetr", title: "Zdroj", src: voltmetr },
-        { name: "zdroj", title: "Zdroj", src: zdroj },
-        { name: "uzel", title: "Zdroj", src: uzel },
+        { name: "ampermetr", title: "Ampérmetr", src: ampermetr },
+        { name: "dioda", title: "Dioda", src: dioda },
+        { name: "motor", title: "Motor", src: motor },
+        { name: "rezistor", title: "Rezistor", src: rezistor },
+        { name: "stridavy", title: "Střídavý", src: stridavy },
+        { name: "voltmetr", title: "Volrmetr", src: voltmetr },
+        { name: "uzel", title: "Uzel", src: uzel },
         { name: "zdrojj", title: "Zdroj", src: zdrojj },
-        { name: "zvonek", title: "Zdroj", src: zvonek },
+        { name: "zvonek", title: "Zvonek", src: zvonek },
     ]
 
 
@@ -361,6 +368,17 @@ function CircuitBuilder() {
         // console.log('Ahojjj')
     }
 
+    function createImgDoProtokolu() {
+        console.log('Vybírejte teď!')
+
+
+
+
+
+        setFocusModeIsOn(false)
+    }
+
+
 
     // function setLinesAndUpdate(value) {
     //     setStageLines(value)
@@ -424,6 +442,8 @@ function CircuitBuilder() {
 
             </div>
             <div className="right">
+                <button className="uk-button-secondary uk-button" onClick={() => setFocusModeIsOn(!focusModeIsOn)} >Do protokolu</button>
+
                 {isSaved &&
                     <button className="uk-button uk-button-default">Uloženo</button>
                 }
@@ -440,7 +460,7 @@ function CircuitBuilder() {
         {/* Konva Canvas */}
 
         <div>
-            <Stage width={window.innerWidth} height={window.innerHeight - 80 - 50} onWheel={(e) => handleWheelOnKonva(e)} draggable={true} scaleX={stageScale} scaleY={stageScale} style={{ background: "#fffbbf" }}>
+            <Stage width={window.innerWidth} ref={stageRef} height={window.innerHeight - 80 - 50} onWheel={(e) => handleWheelOnKonva(e)} draggable={true} scaleX={stageScale} scaleY={stageScale} style={{ background: "#fffbbf" }}>
                 <Layer>
                     <Circle x={0} y={0} radius={1} fill="black" />
                     <Line x={0} y={0} points={[0, 0, 100, 0, 100, 50, 50, 50]} stroke={drawingMode ? "green" : "black"} strokeWidth={9} />
@@ -494,6 +514,12 @@ function CircuitBuilder() {
 
 
 
+                </Layer>
+                <Layer>
+                    {focusModeIsOn &&
+                        <FocusMode />
+
+                    }
                 </Layer>
 
 

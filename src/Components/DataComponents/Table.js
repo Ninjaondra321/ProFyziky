@@ -3,14 +3,13 @@ import { useState, useEffect } from "react";
 import Spreadsheet from "react-spreadsheet";
 
 
-function Table({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
+function Table({ values, deleteTile, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
+
+    const [updateTable, setUpdateTable] = useState(Math.random());
 
     const [title, setTitle] = useState();
     const [tableValues, setTableValues] = useState();
     const [tableData, setTableData] = useState();
-
-    console.log(tileContent)
-    // tileContent([0, 1])
 
     useEffect(() => {
         if (tileContent) {
@@ -23,60 +22,108 @@ function Table({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
         }
     }, []);
 
-    console.log(values)
 
     useEffect(() => {
-        try {
-
-            let tableDataNotConverted = []
-            let tableDataOuptut = []
-
-
-            for (let value of tableValues) {
-
-                for (let mainValue of values) {
-                    if (value == mainValue.id) {
-                        console.log('MainValue found')
-                        tableDataNotConverted.push(mainValue.values)
-                        break
-                    }
+        // Něco jako save fce
+        setIsSaved(false)
+        let tilesCopy = tiles
+        for (let i = 0; i < tilesCopy.length; i++) {
+            if (tilesCopy[i].id == tileID) {
+                tilesCopy[i].content = {
+                    title: title,
+                    tableValues: tableValues
                 }
-
-
+                setTiles(tilesCopy)
+                break
             }
-
-            console.warn(tableDataNotConverted)
-
-            setTableData([])
-        } catch {
-            console.log('Asi nejakej error')
         }
 
-    }, [tableValues]);
+    }, [title, tableValues]);
+
+
+
 
 
     function changeTableValues(id, valueee) {
         let tableValCopy = tableValues
-
         for (let i = 0; i < tableValCopy.length; i++) {
             if (tableValCopy[i].id == id) {
-                tableValCopy[i] = valueee
+                tableValCopy[i].value = valueee
                 setTableValues(tableValCopy)
             }
-
         }
+        setTableValues(tableValCopy)
+        setUpdateTable(Math.random())
 
     }
 
     function addNewValue() {
+        let newID = 0
+        let IDs = []
+
+        try {
+            let t = tableValues
+
+            for (let obj of t) {
+                IDs.push(obj.id)
+            }
+
+            while (true) {
+                if (!IDs.includes(newID)) {
+                    break
+                }
+                newID += 1
+            }
+
+        } catch {
+            console.log('Ahoj asi -- pls nemaz')
+        }
+
+
+
         if (!tableValues) {
-            setTableValues([0])
+            setTableValues([{ id: 0, value: undefined }])
         } else {
-            setTableValues([...tableValues, 0])
+            setTableValues([...tableValues, { id: newID, value: undefined }])
         }
     }
 
+    function getValues(id) {
+
+        let tableValues
+        let symbol
+        let jednotka
+
+
+        for (let val of values) {
+
+
+
+
+            if (val.id == id || val.id == "" + id) {
+                tableValues = val.values
+                symbol = val.symbol
+                jednotka = val.jednotka
+
+                if (typeof (tableValues) != Array) {
+                    console.log("někam se konečně dostáváme")
+                }
+
+                break
+            }
+
+
+
+        }
+        return { symbol: symbol, jednotka: jednotka, values: values }
+
+
+    }
+
     return (<div className="uk-padding-small ">
+        <div className="uk-hidden">
+            {updateTable}
+        </div>
         <div className="uk-card uk-card-default  ">
             <div className="uk-card-header-footer uk-flex" style={{ justifyContent: "space-between", padding: "5px" }}>
 
@@ -95,7 +142,7 @@ function Table({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
 
                     <div uk-dropdown="mode: click">
 
-                        <a><span uk-icon="trash"></span>Odstranit kachličku</a>
+                        <a onClick={() => deleteTile(tileID)}><span uk-icon="trash"></span>Odstranit kachličku</a>
 
                     </div>
 
@@ -105,31 +152,71 @@ function Table({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
             </div>
 
             <hr style={{ margin: 0 }} />
-            <div className="">
 
-                <div style={{ paddingLeft: "90px" }}>
-                    {tableValues &&
-                        tableValues.map(valuee =>
+            <div style={{ overflow: "scroll", flexWrap: "nowrap", display: "flex", height: "calc(100% - 50px)" }}>
+                {tableValues &&
+                    tableValues.map(valuee =>
+                        <div style={{ width: "90px" }}>
+
                             <select className="uk-select" value={valuee.value} style={{ width: "90px" }} onChange={(e) => changeTableValues(valuee.id, e.target.value)} >
                                 {values &&
-                                    values.map(obj =>
-                                        <option key={obj.id} value={obj.id} >{obj.symbol}</option>
+                                    values.map(obj => {
+                                        if (obj.typ == "tabulka") {
+                                            return <option key={obj.id} value={obj.id} >{obj.symbol}</option>
+                                        }
+                                        return <></>
+                                    }
+                                        // <option key={obj.id} value={obj.id} >{obj.symbol}</option>
                                     )
                                 }
                             </select>
-                        )
-                    }
-                    <button className="uk-button uk-button-default" style={{ width: "90px" }} onClick={() => addNewValue()} >+</button>
+
+
+                            {
+                                [getValues(valuee.value)].map(obj => <div>
+                                    {/* <input type="text" className="uk-input" value={obj.symbol} disabled /> */}
+                                    <input type="text" className="uk-input" value={obj.jednotka} disabled />
+                                    {/* <hr style={{ margin: 0, borderWidth: 2, borderColor: "black" }} /> */}
+                                    {
+                                        obj.values.map(val => <>
+                                            <input type="number" className="uk-input" value={val} />
+
+
+                                        </>)
+                                    }
+
+                                    <input type="number" className="uk-input" />
+
+                                </div>)
+
+                            }
+
+
+
+
+                        </div>
+                    )
+                }
+                <button className="uk-button uk-button-default" style={{ width: "90px" }} onClick={() => addNewValue()} >+</button>
+            </div>
+
+            {tableData && <div >
+
+                <div>
+
                 </div>
 
+            </div>
 
-                {tableData &&
+            }
+
+
+            {/* {tableData &&
                     <Spreadsheet data={[]} />
 
-                }
-            </div>
+                } */}
         </div>
-    </div>);
+    </div >);
 }
 
 export default Table;

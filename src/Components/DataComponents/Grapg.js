@@ -7,7 +7,7 @@ import Plot from 'react-plotly.js';
 import { YAxis } from "recharts";
 
 
-function Graph({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
+function Graph({ values, deleteTile, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
 
     const [tabID, setTabID] = useState(1);
 
@@ -17,8 +17,12 @@ function Graph({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
     const [grapgYAxis, setGrapgYAxis] = useState();
     const [graphXAxis, setGraphXAxis] = useState();
 
+    const [graphMeritko, setGraphMeritko] = useState();
+
+    const [reloadPage, setReloadPage] = useState(Math.random());
+
+
     useEffect(() => {
-        console.log(tileContent)
         if (tileContent) {
             if (tileContent.title) {
                 settileTitle(tileContent.title)
@@ -30,12 +34,11 @@ function Graph({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
                 setGrapgYAxis(tileContent.yAxisID)
             } if (tileContent.xAxis) {
                 setGraphXAxis(tileContent.xAxis)
+                setTabID(0)
             }
-            // setGraphProps(tileContent.graphProps)
         }
 
     }, []);
-
 
     useEffect(() => {
         // Něco jako save function
@@ -57,8 +60,43 @@ function Graph({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
 
     }, [grapgYAxis, graphTitle, graphXAxis]);
 
+    function craftData() {
+        let ouptut = []
 
-    const [updateTile, setUpdateTile] = useState(Math.random());
+        try {
+            let xAxisCopy = graphXAxis
+            for (let x of xAxisCopy) {
+                for (let val of values) {
+                    if (val.id == x.value) {
+                        ouptut.push(
+                            {
+                                marker: { color: x.color },
+                                type: "scatter",
+                                x: graphMeritko,
+                                y: val.values,
+
+
+                            }
+                        )
+                    }
+                }
+            }
+            return ouptut
+        } catch {
+            // Uživatel ještě nevybral hodnoty grafu
+            console.log("Helou error")
+            return false
+        }
+    }
+
+
+    useEffect(() => {
+        for (let x of values) {
+            if (x.id == grapgYAxis) {
+                setGraphMeritko(x.values)
+            }
+        }
+    }, [grapgYAxis]);
 
 
     function addNewGraphValue() {
@@ -71,17 +109,14 @@ function Graph({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
         }
     }
 
-    const [reloadPage, setReloadPage] = useState(Math.random());
 
     function changeXAxis(id, type, value) {
         let xAxisCopy = graphXAxis
 
-        console.log(id, type, value)
 
         for (let i = 0; i < xAxisCopy.length; i++) {
             if (xAxisCopy[i].id == id) {
                 xAxisCopy[i][type] = value
-                console.log(xAxisCopy)
 
                 setReloadPage(Math.random())
 
@@ -98,9 +133,6 @@ function Graph({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
 
 
     return (<div className="uk-padding-small ">
-        <div className="uk-hidden">
-            {updateTile}
-        </div>
         <div className="uk-card uk-card-default  ">
             <div className="uk-card-header-footer uk-flex" style={{ justifyContent: "space-between", padding: "5px", paddingBottom: 0 }}>
 
@@ -120,7 +152,7 @@ function Graph({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
 
                     <span uk-icon="more-vertical"></span>
                     <div uk-dropdown="mode: click">
-                        <a><span uk-icon="trash"></span>Odstranit kachličku</a>
+                        <a onClick={() => deleteTile(tileID)}><span uk-icon="trash"></span>Odstranit kachličku</a>
                     </div>
                 </div>
 
@@ -135,23 +167,28 @@ function Graph({ values, setTiles, tiles, tileContent, tileID, setFullscreenID, 
                         <div className="center">
                             <div className="" style={{ width: "100%", height: "100%" }}>
 
-
                                 <Plot
-                                    data={[
-                                        {
-                                            x: [1, 2, 3],
-                                            y: [2, 6, 3],
-                                            type: 'scatter',
-                                            mode: 'lines+markers',
-                                            marker: { color: 'red' },
-                                        },
-                                        { type: 'scatter', x: [1, 6, 4], y: [2, 5, 3] },
+                                    // data={[
+                                    //     {
+                                    //         x: [1, 2, 3],
+                                    //         y: [2, 6, 3],
+                                    //         type: 'scatter',
+                                    //         mode: 'lines+markers',
+                                    //         marker: { color: 'red' },
+                                    //     },
+                                    //     { type: 'scatter', x: [1, 6, 4], y: [-2, 5, 3] },
 
-                                    ]}
-                                    layout={{ width: "100%", height: "100%", title: 'A Fancy Plot' }}
+                                    // ]}
+
+
+                                    data={craftData()}
+
+
+                                    layout={{ width: "100%", height: "100%", title: graphTitle }}
                                 // style={{ width: "100%", height: "100%" }}
 
                                 />
+
 
                             </div>
 

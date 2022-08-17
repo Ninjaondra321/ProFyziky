@@ -4,7 +4,6 @@ import { Link, useParams } from "react-router-dom";
 import Table from "../Components/DataComponents/Table";
 import Graph from "../Components/DataComponents/Grapg";
 import Average from "../Components/DataComponents/Average";
-import { type } from "jquery";
 
 function DataBuilder() {
     let { projectName } = useParams()
@@ -21,6 +20,8 @@ function DataBuilder() {
     const [fullscreenID, setFullscreenID] = useState(false);
 
     const [refresh, setRefresh] = useState();
+
+    const [updateTiles, setUpdateTiles] = useState(Math.random());
 
 
 
@@ -130,7 +131,6 @@ function DataBuilder() {
         for (let i = 0; i < valuesCopy.length; i++) {
             if (valuesCopy[i].id == id) {
                 valuesCopy[i][typee] = value
-                console.log(valuesCopy)
                 setValues(valuesCopy)
                 setRefresh(Math.random())
                 return
@@ -141,12 +141,28 @@ function DataBuilder() {
     }
 
 
+    function deleteTile(id) {
+        let tilesCopy = tiles
+        for (let i = 0; i < tilesCopy.length; i++) {
+            if (tilesCopy[i].id == id) {
+                tilesCopy.splice(i, 1)
+                setTiles(tilesCopy)
+                setUpdateTiles(Math.random())
+                return
+            }
+        }
+    }
+
+
 
 
 
 
     return (<div>
         {/* SubNavBar */}
+        <div className="uk-hidden">
+            {updateTiles}
+        </div>
         <div className="subnavbar">
 
             <div className="left">
@@ -289,13 +305,28 @@ function DataBuilder() {
                     tiles.map(obj => {
 
                         if (obj.type == "table") {
-                            return <Table setTiles={setTiles} fullscreenID={fullscreenID} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={values} />
+                            return <Table setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
+                                values={values}
+                            // values={[
+                            //     { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                            //     { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                            //     { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                            // ]}
+                            />
                         }
                         else if (obj.type == "graph") {
-                            return <Graph setTiles={setTiles} fullscreenID={fullscreenID} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={values} />
+                            return <Graph setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
+                                // values={values} 
+                                values={[
+                                    { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
+                                    { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50,] },
+                                    { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50,] },
+                                ]}
+
+                            />
                         }
                         else if (obj.type == "average") {
-                            return <Average setTiles={setTiles} fullscreenID={fullscreenID} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={[
+                            return <Average setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={[
                                 { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
                                 { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
                                 { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },

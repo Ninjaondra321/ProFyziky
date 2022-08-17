@@ -117,22 +117,22 @@ function Homepage() {
         <div className="uk-position-relative uk-container">
             <div className="uk-position-relative uk-container">
                 <h1 className="uk-heading-large">ProFyziky</h1>
-                <h3>Jedinná stránka, kterou správný fyzik potřebuje</h3>
+                <h2>Jedinná stránka, kterou správný fyzik potřebuje</h2>
 
-                <div className="uk-childer-width-1-3@s uk-grid" uk-grid="">
-                    <div className="uk-margin uk-padding">
+                <div className="uk-child-width-1-3@s uk-grid uk-margin uk-padding " uk-grid="">
+                    <div>
                         <Link className="uk-card uk-card-primary uk-card-hover uk-card-body uk-margin" to="/circuits">
                             <img src="../Imgs/nazorny_obvod.png" alt="s" />
                             <h2>Elektrická schémata</h2>
                         </Link>
                     </div>
-                    <div className="uk-margin uk-padding">
+                    <div>
                         <Link className="uk-card uk-card-primary uk-card-hover uk-card-body uk-margin" to="/protocols">
                             <img src="/nazorny_obvod.png" alt="s" />
                             <h2>Protokoly</h2>
                         </Link>
                     </div>
-                    <div className="uk-margin uk-padding">
+                    <div>
                         <Link className="uk-card uk-card-primary uk-card-hover uk-card-body uk-margin" to="/data">
                             <img src="/nazorny_obvod.png" alt="s" />
                             <h2>Data</h2>
@@ -147,7 +147,7 @@ function Homepage() {
             <h1 style={{ paddingBottom: "25px" }}>Taková menší ukázka
                 {/* {["<3", ":)"][Math.round(Math.random())]} */}
                 {" <3"}
-                {/* {":)"} */}
+                {/* {";-)"} */}
 
             </h1>
 
