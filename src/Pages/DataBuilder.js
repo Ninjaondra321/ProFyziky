@@ -12,9 +12,6 @@ function DataBuilder() {
     const [fileName, setFileName] = useState();
     const [tiles, setTiles] = useState();
     const [values, setValues] = useState([
-        { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-        { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-        { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
     ]);
 
     const [fullscreenID, setFullscreenID] = useState(false);
@@ -131,6 +128,25 @@ function DataBuilder() {
         for (let i = 0; i < valuesCopy.length; i++) {
             if (valuesCopy[i].id == id) {
                 valuesCopy[i][typee] = value
+
+                console.debug(typee)
+                console.debug(value)
+
+                if (typee == "typ") {
+                    if (value == "tabulka") {
+                        valuesCopy[i].value = []
+                    }
+                    if (value == "konstanta") {
+                        valuesCopy[i].value = 0
+                    }
+                    if (value == "vzorec") {
+                        valuesCopy[i].value = ""
+                    }
+
+                }
+
+
+
                 setValues(valuesCopy)
                 setRefresh(Math.random())
                 return
@@ -139,7 +155,7 @@ function DataBuilder() {
         }
 
     }
-
+    console.log(values)
 
     function deleteTile(id) {
         let tilesCopy = tiles
@@ -154,7 +170,11 @@ function DataBuilder() {
     }
 
 
-
+    window.onbeforeunload = function () {
+        if (!isSaved) {
+            return "Opravdu chcete opustit stránku? Všechny neuložené změny budou ztraceny."
+        }
+    }
 
 
 
@@ -293,8 +313,8 @@ function DataBuilder() {
                     <button
                         style={{ height: "min-content" }}
                         className="uk-button uk-button-default"
-                        onClick={() => setValues([...values, { id: getNewValueID(), symbol: "", nazev: "", jednotka: "", typ: "", values: [] }])
-                        }>
+                        onClick={() => setValues([...values, { id: getNewValueID(), symbol: "", nazev: "", jednotka: "", typ: "", values: [] }])}
+                    >
                         +
                     </button>
 
@@ -306,31 +326,40 @@ function DataBuilder() {
 
                         if (obj.type == "table") {
                             return <Table setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
+                                setValues={setValues}
                                 values={values}
+                                setUpdateTiles={setUpdateTiles}
+                            // setValues={console.log}
+                            // values={[
+                            //     { id: 0, typ: "tabulka", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                            //     { id: 1, typ: "tabulka", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                            //     { id: 2, typ: "tabulka", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
+                            // ]}
+
+                            />
+                        }
+                        else if (obj.type == "graph") {
+                            return <Graph setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
+                                values={values}
+                            // values={[
+                            //     { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
+                            //     { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50,] },
+                            //     { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50,] },
+                            // ]}
+
+                            />
+                        }
+                        else if (obj.type == "average") {
+                            return <Average setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
+                                values={values}
+
                             // values={[
                             //     { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
                             //     { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
                             //     { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
                             // ]}
-                            />
-                        }
-                        else if (obj.type == "graph") {
-                            return <Graph setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
-                                // values={values} 
-                                values={[
-                                    { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
-                                    { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50,] },
-                                    { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50,] },
-                                ]}
 
                             />
-                        }
-                        else if (obj.type == "average") {
-                            return <Average setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved} values={[
-                                { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                                { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                                { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                            ]} />
                         }
                     })
 
@@ -406,7 +435,6 @@ function DataBuilder() {
         }
 
 
-        <div className="uk-padding-large"></div>
         <div className="uk-padding-large"></div>
     </div>);
 }

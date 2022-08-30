@@ -380,12 +380,19 @@ function CircuitBuilder() {
 
 
 
+
     // function setLinesAndUpdate(value) {
     //     setStageLines(value)
     // }
 
 
     console.debug(stageImages)
+
+    window.onbeforeunload = function () {
+        if (!isSaved) {
+            return "Opravdu chcete opustit stránku? Všechny neuložené změny budou ztraceny."
+        }
+    }
 
 
     return (<div>

@@ -4,7 +4,13 @@ import { ResponsiveLine, ResponsiveLineCanvas, LineCanvas } from '@nivo/line'
 import { useEffect } from "react";
 
 import Plot from 'react-plotly.js';
+import Plotly from 'react-plotly.js';
 import { YAxis } from "recharts";
+import { useRef } from "react";
+
+
+
+
 
 
 function Graph({ values, deleteTile, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
@@ -20,6 +26,10 @@ function Graph({ values, deleteTile, setTiles, tiles, tileContent, tileID, setFu
     const [graphMeritko, setGraphMeritko] = useState();
 
     const [reloadPage, setReloadPage] = useState(Math.random());
+
+    const plot = useRef(null)
+
+
 
 
     useEffect(() => {
@@ -129,6 +139,34 @@ function Graph({ values, deleteTile, setTiles, tiles, tileContent, tileID, setFu
 
     }
 
+    function convertPlotToPng() {
+    }
+
+
+
+    function copyGraphToClipboard() {
+        // Plotly.plot('graph', craftData(), { width: "100%", height: "100%", title: graphTitle }).then((gd) => {
+        //     return Plotly.toImage(gd);
+        // }).then((dataURI) => {
+        //     console.log(dataURI);
+        // });
+
+        let data = craftData()
+
+
+        let layout = { width: "100%", height: "100%", title: graphTitle }
+
+        let img_png = Plotly.d3.select("#graph")
+
+        Plotly.newPlot('graph', data, layout);
+        Plotly.toImage('graph', { format: 'png', width: 800, height: 600 }).then(function (dataURL) {
+            console.log(dataURL);
+
+            img_png.attr("src", dataURL);
+        });
+    }
+
+
 
 
 
@@ -153,6 +191,7 @@ function Graph({ values, deleteTile, setTiles, tiles, tileContent, tileID, setFu
                     <span uk-icon="more-vertical"></span>
                     <div uk-dropdown="mode: click">
                         <a onClick={() => deleteTile(tileID)}><span uk-icon="trash"></span>Odstranit kachličku</a>
+                        {/* <a onClick={() => convertPlotToPng()}><span uk-icon="trash"></span>Zkopírovat obrázek</a> */}
                     </div>
                 </div>
 
@@ -163,11 +202,16 @@ function Graph({ values, deleteTile, setTiles, tiles, tileContent, tileID, setFu
 
             <div className="">
                 {tabID == 0 &&
+
                     <div >
+                        <button onClick={() => copyGraphToClipboard()}>
+                            ASHIASODS
+                        </button>
                         <div className="center">
                             <div className="" style={{ width: "100%", height: "100%" }}>
 
                                 <Plot
+                                    id="graph"
                                     // data={[
                                     //     {
                                     //         x: [1, 2, 3],
@@ -180,7 +224,7 @@ function Graph({ values, deleteTile, setTiles, tiles, tileContent, tileID, setFu
 
                                     // ]}
 
-
+                                    ref={plot}
                                     data={craftData()}
 
 

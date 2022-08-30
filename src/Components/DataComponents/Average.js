@@ -14,7 +14,21 @@ function Average({ values, deleteTile, setTiles, tiles, tileContent, tileID, set
     const [tretiRadek, setTretiRadek] = useState();
     const [ctvrtyRadek, setCtvrtyRadek] = useState();
 
+    useEffect(() => {
+        // Convert all values to numbers
+        let output = [];
 
+        for (let i = 0; i < values.length; i++) {
+            output[i] = values[i]
+            let cisla = []
+
+            for (let j = 0; j < values[i].values.length; j++) {
+                cisla.push(Number(values[i].values[j]))
+            }
+            output[i].values = cisla
+        }
+        values = output;
+    }, [values]);
 
 
     useEffect(() => {
@@ -56,9 +70,6 @@ function Average({ values, deleteTile, setTiles, tiles, tileContent, tileID, set
     }
 
 
-
-
-
     function zaokrouhli(cislo, position, type) {
         if (type == "cele") {
             return Math.round(cislo / 10 ** position) * 10 ** position
@@ -74,8 +85,12 @@ function Average({ values, deleteTile, setTiles, tiles, tileContent, tileID, set
         for (let value of values) {
             if (value.id == valueID) {
 
+                console.log(value.values)
+
                 let prumer = value.values.reduce((a, b) => a + b, 0) / value.values.length.toFixed(5)
                 let odchylka = getStandardDeviation(value.values).toFixed(5)
+
+
 
 
                 let vysledekZaokrouhleni = naJednoPlatne(odchylka)
@@ -94,7 +109,7 @@ function Average({ values, deleteTile, setTiles, tiles, tileContent, tileID, set
                     prumerZaokrouhleno: prumerZaokr,
                     odchylka: odchylka,
                     odchylkaZaokrouhleno: odchylkaZaokr,
-                    toPosledniVProcentech: (odchylkaZaokr / prumerZaokr).toFixed(2)
+                    toPosledniVProcentech: (odchylkaZaokr / prumerZaokr * 100).toFixed(2)
                 })
 
 

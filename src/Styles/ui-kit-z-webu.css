@@ -11392,7 +11392,6 @@ html {
 .protocols-workspace .left {
     max-width: 750px;
     width: fit-content;
-
 }
 
 
@@ -11402,6 +11401,11 @@ html {
     .protocols-workspace .right {
         padding: 10px
     }
+
+    .protocols-workspace .left {
+        width: -webkit-fill-available;
+    }
+
 }
 
 
@@ -11603,7 +11607,7 @@ textarea {
 }
 
 textarea {
-    height: 60px !important;
+    min-height: 60px !important;
 }
 
 /* 
@@ -11769,4 +11773,41 @@ animation-fill-mode: both;
 .uk-form-danger {
     color: #f0506e !important;
     border-color: #f0506e !important;
+}
+
+
+/* On mobile */
+@media (max-width: 960px) {
+    .vyber-stylu-protokolu {
+        overflow-x: scroll !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        flex-direction: row !important;
+
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        margin-left: 10px;
+
+
+    }
+
+    .vyber-stylu-protokolu>* {
+        width: 250px !important;
+        margin: 10px !important;
+    }
+
+}
+
+.mobilni-protokol {
+    transform: scale(0.7);
+    transform-origin: top left;
+    overflow: scroll;
+    /* Set height to be according to the transform */
+}
+
+#hovnoo {
+    color: red !important;
 }

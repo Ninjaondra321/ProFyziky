@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { contains } from "jquery";
+import { Helmet } from "react-helmet";
 
 function Data() {
     const [Data, setData] = useState();
@@ -73,6 +74,11 @@ function Data() {
                 )
             }
         </div>
+
+        <Helmet>
+            <title>ProFyziky | Data</title>
+
+        </Helmet>
 
     </div>);
 }
