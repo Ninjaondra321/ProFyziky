@@ -2,6 +2,7 @@ import { useParams, useNavigate, } from "react-router-dom";
 import { useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 // KaTeX dependency
 import katex from "katex";
@@ -65,7 +66,7 @@ function ProtocolBuilder() {
     // Metadata
     const [cisloCviceni, setCisloCviceni] = useState();
     const [fileName, setfileName] = useState();
-    // const [sources, setSources] = useState([]);
+    const [sources, setSources] = useState([]);
 
     // Section: Hlava
     const [userName, setUserName] = useState();
@@ -83,6 +84,8 @@ function ProtocolBuilder() {
     // Section: Hlavní část
     const [hlavniCast, setHlavniCast] = useState("");
     const hlavniCastQuill = useRef();
+    const [ConvertedValue, setConvertedValue] = useState();
+
 
     const A4page = useRef()
 
@@ -92,7 +95,11 @@ function ProtocolBuilder() {
     const [styleName, setStyleName] = useState("vychozi");
     const [styleCSS, setStyleCSS] = useState();
 
-    const [ActiveSection, setActiveSection] = useState("vzhled");
+    const [ActiveSection, setActiveSection] = useState("hlavni-cast");
+
+    const [updateSources, setUpdateSources] = useState(Math.random());
+
+    const enableMathQuillFormulaAuthoring = mathquill4quill({ Quill, katex });
 
     useEffect(() => {
         // var styleToUse = "<style>"
@@ -108,11 +115,6 @@ function ProtocolBuilder() {
         setStyleCSS(styleToUse)
     }, [styleName]);
 
-
-
-
-
-    const enableMathQuillFormulaAuthoring = mathquill4quill({ Quill, katex });
 
     const styles = [
         {
@@ -173,6 +175,8 @@ function ProtocolBuilder() {
 
                     setHlavniCast(protocol.hlavniCast)
 
+                    setSources(protocol.sources)
+
                     setZaver(protocol.zaver)
 
                     return
@@ -207,6 +211,7 @@ function ProtocolBuilder() {
                 pomucky: null,
                 hlavniCast: null,
                 zaver: null,
+                sources: [],
             })
 
             console.log(userInfo.Class)
@@ -251,6 +256,7 @@ function ProtocolBuilder() {
                 pomucky: null,
                 hlavniCast: null,
                 zaver: null,
+                sources: [],
             })
 
             localStorage.setItem('ProFyziky-Protocols', JSON.stringify(protocols))
@@ -259,27 +265,16 @@ function ProtocolBuilder() {
 
     }, []);
 
-
-
     useEffect(() => {
-
-
         try {
-
             enableMathQuillFormulaAuthoring(
                 hlavniCastQuill.current.editor,
                 { operators: CUSTOM_OPERATORS }
             );
-            console.debug('Hotovooooo')
-
         } catch (e) {
             console.debug(e)
-
-
         }
     }, [hlavniCastQuill]);
-
-
 
     function askForProtocolNumber() {
         const protocolNumber = prompt('Kolikátá je to laboratorní práce? (Cvičení č.___)')
@@ -288,7 +283,6 @@ function ProtocolBuilder() {
 
         return protocolNumber
     }
-
 
     function save() {
         let protocols = JSON.parse(localStorage.getItem('ProFyziky-Protocols'))
@@ -315,6 +309,7 @@ function ProtocolBuilder() {
             pomucky: pomucky,
             hlavniCast: hlavniCast,
             zaver: zaver,
+            sources: sources,
         })
         localStorage.setItem('ProFyziky-Protocols', JSON.stringify(protocols))
         setIsSaved(true)
@@ -326,7 +321,7 @@ function ProtocolBuilder() {
 
     useEffect(() => {
         setIsSaved(false)
-    }, [fileName, userName, userColeague, userClass, userDate, nadpis, nadNadpis, pomucky, hlavniCast, zaver]);
+    }, [fileName, userName, userColeague, userClass, userDate, nadpis, nadNadpis, pomucky, hlavniCast, zaver, sources]);
 
     function extendTextFromBadge(variable, setVariable, value) {
         let text = variable
@@ -398,9 +393,6 @@ function ProtocolBuilder() {
         printWindow.document.write("<style>" + mathCSS + "</style>")
         printWindow.document.write("<div class='A4'>" + html + "</div>");
 
-        printWindow.document.write("<image src='" + testingImage + "' alt='askjhasgkdgjuas' />");
-
-
 
 
         // printWindow.document.write(`<style > 
@@ -426,29 +418,32 @@ function ProtocolBuilder() {
 
 
     }
-    const myComponent = useRef(null)
 
-    // Display propmpt before going to another page
-    myComponent.onbeforeunload = function () {
-        if (!isSaved) {
-            return "Opravdu chcete opustit stránku? Všechny neuložené změny budou ztraceny."
-        }
-    }
-
-    const [pasteValue, setPasteValue] = useState();
-
-    const [QuillValue, setQuillValue] = useState("");
-    const [ConvertedValue, setConvertedValue] = useState();
+    // window.onbeforeunload = function () {
+    //     if (!isSaved) {
+    //         return "Opravdu chcete opustit stránku? Všechny neuložené změny budou ztraceny."
+    //     }
+    // }
 
     function convertText() {
         let parser = new DOMParser();
-        // let doc = parser.parseFromString("" + QuillValue, 'text/html');
         let doc = parser.parseFromString("" + hlavniCast, 'text/html');
 
         let pTags = doc.body.getElementsByTagName("p")
         for (let pTag of pTags) {
-            if (pTag.getAttribute("content") !== null) {
-                let content = pTag.getAttribute("content")
+            console.log(pTag.classList)
+            console.warn('Hallooooooo')
+            let content
+            try {
+                for (let source of sources) {
+                    if (source.name == pTag.innerText) {
+                        content = source.data
+                        break
+                    }
+                }
+            } catch (error) {
+            }
+            if (content) {
                 pTag.innerHTML = content
             }
         }
@@ -458,11 +453,7 @@ function ProtocolBuilder() {
 
     useEffect(() => {
         setConvertedValue(convertText())
-    }, [hlavniCast]);
-
-
-
-
+    }, [hlavniCast, sources, updateSources]);
 
     useEffect(() => {
         hlavniCastQuill.current.editor.root.innerHTML = hlavniCast
@@ -470,8 +461,55 @@ function ProtocolBuilder() {
 
 
 
+    // useEffect(() => {
 
-    return (<div ref={myComponent}>
+    //     setSources([
+    //         { name: "Zdroj 01", type: "circuits", soubor: 0, data: '<img src="https://images.unsplash.com/photo-1606115915090-be18fea23ec7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=465&q=80" />' },
+    //         { name: "Zdroj 02", type: "data", soubor: 1, tile: 1, data: "<h1>Nasrat</h1>" },
+    //     ]
+    //     )
+    // }, []);
+
+    function editSource(index, type, data) {
+        let newSources = sources
+        newSources[index][type] = data
+
+        let content
+        try {
+            if (newSources[index].type == "data") {
+                let data = JSON.parse(localStorage.getItem('ProFyziky-Data'))
+                let tile = data[newSources[index].soubor].tiles[newSources[index].tile]
+                console.log(data[newSources[index].soubor].tiles[newSources[index].tile])
+                // console.log(data[newSources[index].soubor].tiles)
+                // console.log(data[newSources[index].soubor])
+                // console.log(newSources[index].tile)
+                content = tile.data
+            }
+            // content = "<p>Zdroj ještě není načtený... - Pokud se nic neděje, zkuste kliknout na tlačítko aktualizovat ve výběru zdrojů</p>"
+        } catch (error) {
+            content = "<p>Zdroj ještě není načtený... - Pokud se nic neděje, zkuste kliknout na tlačítko aktualizovat ve výběru zdrojů</p>"
+        }
+        newSources[index].data = content
+        console.debug(content)
+
+
+        setSources(newSources)
+        setUpdateSources(Math.random())
+    }
+
+    console.log(sources)
+
+    function addSource(type) {
+        let newSources = sources
+        newSources.push({ name: "Zdroj " + (sources.length + 1), type: type, soubor: 0, data: "<p>Zdroj ještě není načtený... - Pokud se nic neděje, zkuste kliknout na tlačítko aktualizovat ve výběru zdrojů</p>" })
+        setSources(newSources)
+        setUpdateSources(Math.random())
+
+    }
+
+
+
+    return (<div>
         {/* SubNavBar */}
         <style>
 
@@ -480,8 +518,6 @@ function ProtocolBuilder() {
 
             <div className="left">
                 <style>{styleCSS}</style>
-
-
 
                 <div className="uk-inline">
                     <button className="uk-button uk-button-text" >File</button>
@@ -674,53 +710,14 @@ function ProtocolBuilder() {
                                 {/* <Editor options={[["\\int^{s}_{x}{d}", "\\int"], ["\\binom{n}{k}", "\\binom"]]} key={JSON.stringify(null)} /> */}
 
                                 <ReactQuill id="moje-react-quill" ref={hlavniCastQuill} theme="snow"
-
-                                    // value={`
-                                    //     <h1>Testový nadpis</h1>
-                                    //     <p>Testový text</p>
-                                    //     <table>
-                                    //         <thead>
-
-                                    //         <tr>
-                                    //             <td>1</td>
-                                    //             <td>2</td>
-                                    //             <td>3</td>
-                                    //         </tr>
-                                    //         </thead>
-                                    //         <tbody>
-                                    //         <tr>
-                                    //             <td>4</td>
-                                    //             <td>5</td>
-                                    //             <td>6</td>
-                                    //         </tr>
-                                    //         </tbody>
-                                    //     </table>
-                                    // `}
-
                                     onChange={e => setHlavniCast(e)}
-                                    // onChange={e => setQuillValue(e)}
-
                                     modules={{
-                                        table: false,  // disable table module
-                                        // QuillBetterTable: {
-                                        //     operationMenu: {
-                                        //         items: {
-                                        //             unmergeCells: {
-                                        //                 text: 'Another unmerge cells name'
-                                        //             }
-                                        //         }
-                                        //     }
-                                        // },
-
 
                                         imageResize: {
                                             parchment: Quill.import('parchment'),
                                             modules: ['Resize', 'DisplaySize', 'Toolbar']
-
-                                            // See optional "config" below
                                         },
                                         formula: true,
-
                                         toolbar: [
                                             [{ 'header': [2, 3, false] }],
                                             [{ "align": [false, 'center', 'right', 'justify'] }],
@@ -733,51 +730,87 @@ function ProtocolBuilder() {
                                     }
 
                                 />
-                                <div className="uk-padding">
+                                {/* <div className="uk-padding">
                                     <input type="text" value={pasteValue} onChange={e => setPasteValue(e.target.value)} />
                                     <button onClick={() => {
-                                        // hlavniCastQuill.current.getEditor().clipboard.dangerouslyPasteHTML("" + QuillValue + pasteValue);
-                                        // console.log(hlavniCastQuill.current.getEditor().clipboard);
-                                        // console.log(hlavniCastQuill.current.getEditor());
-                                        // console.log(hlavniCastQuill);
-                                        // hlavniCastQuill.current.state.value = "Hovnoo";
-                                        // hlavniCastQuill.current.setEditorContents("Hovnoo")
                                         console.log(hlavniCastQuill)
                                         console.log(hlavniCastQuill.current)
                                         console.log(hlavniCastQuill.current.editor.root)
                                         hlavniCastQuill.current.editor.root.innerHTML = "" + hlavniCast + pasteValue + "<p></p>";
-                                        // setQuillValue(QuillValue + pasteValue);
-                                        // setPasteValue("");
-                                        // hlavniCastQuill.clipboard.dangerouslyPasteHTML("<table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>");
                                     }}>
                                         Vložit
                                     </button>
+                                </div> */}
+
+                                <div className="uk-padding">
+                                    <h2>Zdroje</h2>
+                                    {
+                                        sources &&
+                                        <div className="">
+
+                                            {updateSources &&
+                                                sources.map((source, index) => <div key={source.id}>
+                                                    {source.type == "circuits" ?
+                                                        <div className="uk-flex uk-flex-between">
+                                                            <input type="text" className="uk-input" value={source.name} onChange={e => editSource(index, "name", e.target.value)} />
+
+                                                            <label className="uk-form-label">Soubor</label>
+                                                            <select className="uk-select" value={source.soubor} onChange={e => editSource(index, "soubor", e.target.value)}>
+                                                                {JSON.parse(localStorage.getItem('ProFyziky-Circuits')).map(circuit => <option key={circuit.id} value={circuit.id}>{circuit.title}</option>)}
+                                                            </select>
+
+                                                        </div>
+                                                        :
+                                                        <div className="uk-flex uk-flex-between">
+                                                            <input type="text" className="uk-input" value={source.name} onChange={e => editSource(index, "name", e.target.value)} />
+
+                                                            <label className="uk-form-label">Soubor</label>
+                                                            <select className="uk-select" value={source.soubor} onChange={e => editSource(index, "soubor", e.target.value)}>
+                                                                {JSON.parse(localStorage.getItem('ProFyziky-Data')).map(file => <option key={file.id} value={file.id}>{file.fileName}</option>)}
+                                                            </select>
+                                                            <label className="uk-form-label">Dlaždice</label>
+                                                            <select className="uk-select" value={source.tile} onChange={e => editSource(index, "tile", e.target.value)}>
+                                                                {JSON.parse(localStorage.getItem('ProFyziky-Data'))[source.soubor].tiles.map(tile => <option key={tile.id} value={tile.id}>{"" + tile.type + "-" + tile.content.title}</option>)}
+                                                            </select>
 
 
+                                                            <span uk-icon="icon: refresh"></span>
+                                                            <Link to="/404">
+                                                                <span uk-icon="icon:  file-edit"></span>
+                                                            </Link>
+
+
+                                                        </div>
+                                                    }
+                                                    <hr />
+                                                </div>)}
+
+                                        </div>
+                                    }
+
+                                </div>
+
+
+                                <div className="uk-padding">
+
+                                    <div className="uk-child-width-1-2 uk-grid-match" uk-grid="">
+                                        <div className="uk-card-default uk-card-body">
+                                            <a onClick={() => addSource("circuits")}>
+                                                <h3>+ El. obvod</h3>
+                                            </a>
+                                        </div>
+                                        <div className="uk-card-default uk-card-body">
+                                            <a onClick={() => addSource("data")}>
+
+                                                <h3>+ Data</h3>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="uk-padding"></div>
 
-                            <div className="  uk-child-width-1-5@m" uk-grid="">
 
-                                <div className="uk-card-body uk-card uk-card-hover">
-                                    <h1>T</h1>
-                                    <h3>LaTeX</h3>
-                                </div>
-                                <div className="uk-card-body uk-card uk-card-hover">
-                                    <h1>T</h1>
-                                    <h3>Graf</h3>
-                                </div>
-                                <div className="uk-card-body uk-card uk-card-hover">
-                                    <h1>T</h1>
-                                    <h3>Schéma</h3>
-                                </div>
-                                <div className="uk-card-body uk-card uk-card-hover">
-                                    <h1>T</h1>
-                                    <h3>Data</h3>
-                                </div>
-                            </div>
                         </div>
                         <div className="uk-padding-small"></div>
 
@@ -1178,7 +1211,7 @@ function ProtocolBuilder() {
 
             </div>
 
-        </div>
+        </div >
         {/* END Workspace */}
 
         {/* 

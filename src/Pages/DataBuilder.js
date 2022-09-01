@@ -72,22 +72,26 @@ function DataBuilder() {
 
 
     function save() {
-        let l = JSON.parse(localStorage.getItem('ProFyziky-Data'))
+        setCreateData(Math.random())
 
-        for (let i = 0; i < l.length; i++) {
-            if (l[i].id == projectName) {
-                l.splice(i)
-                l.push({
-                    id: projectName,
-                    fileName: fileName,
-                    values: values,
-                    tiles: tiles,
-                })
-                localStorage.setItem('ProFyziky-Data', JSON.stringify(l))
-                setIsSaved(true)
-                return
+        setTimeout(() => {
+            let l = JSON.parse(localStorage.getItem('ProFyziky-Data'))
+
+            for (let i = 0; i < l.length; i++) {
+                if (l[i].id == projectName) {
+                    l.splice(i)
+                    l.push({
+                        id: projectName,
+                        fileName: fileName,
+                        values: values,
+                        tiles: tiles,
+                    })
+                    localStorage.setItem('ProFyziky-Data', JSON.stringify(l))
+                    setIsSaved(true)
+                    return
+                }
             }
-        }
+        }, 50)
     }
 
 
@@ -155,7 +159,6 @@ function DataBuilder() {
         }
 
     }
-    console.log(values)
 
     function deleteTile(id) {
         let tilesCopy = tiles
@@ -170,11 +173,32 @@ function DataBuilder() {
     }
 
 
-    window.onbeforeunload = function () {
-        if (!isSaved) {
-            return "Opravdu chcete opustit stránku? Všechny neuložené změny budou ztraceny."
+    // window.onbeforeunload = function () {
+    //     if (!isSaved) {
+    //         return "Opravdu chcete opustit stránku? Všechny neuložené změny budou ztraceny."
+    //     }
+    // }
+
+    function addNewValue() {
+        let highest = 0
+        let valueValues = []
+
+        for (let value of values) {
+            if (value.values.length > highest) {
+                highest = value.values.length
+            }
         }
+
+        console.log(highest)
+
+        for (let i = 0; i < highest; i++) {
+            valueValues.push(0)
+        }
+
+        setValues([...values, { id: getNewValueID(), symbol: "", nazev: "", jednotka: "", typ: "", values: valueValues }])
     }
+
+    const [createData, setCreateData] = useState(Math.random());
 
 
 
@@ -313,7 +337,9 @@ function DataBuilder() {
                     <button
                         style={{ height: "min-content" }}
                         className="uk-button uk-button-default"
-                        onClick={() => setValues([...values, { id: getNewValueID(), symbol: "", nazev: "", jednotka: "", typ: "", values: [] }])}
+                        onClick={() =>
+                            addNewValue()
+                        }
                     >
                         +
                     </button>
@@ -325,40 +351,20 @@ function DataBuilder() {
                     tiles.map(obj => {
 
                         if (obj.type == "table") {
-                            return <Table setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
+                            return <Table setTiles={setTiles} createData={createData} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
                                 setValues={setValues}
                                 values={values}
                                 setUpdateTiles={setUpdateTiles}
-                            // setValues={console.log}
-                            // values={[
-                            //     { id: 0, typ: "tabulka", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                            //     { id: 1, typ: "tabulka", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                            //     { id: 2, typ: "tabulka", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                            // ]}
-
                             />
                         }
                         else if (obj.type == "graph") {
-                            return <Graph setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
+                            return <Graph setTiles={setTiles} createData={createData} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
                                 values={values}
-                            // values={[
-                            //     { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
-                            //     { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50,] },
-                            //     { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50, Math.random() * 50,] },
-                            // ]}
-
                             />
                         }
                         else if (obj.type == "average") {
-                            return <Average setTiles={setTiles} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
+                            return <Average setTiles={setTiles} createData={createData} fullscreenID={fullscreenID} deleteTile={deleteTile} setFullscreenID={setFullscreenID} key={obj.id} tiles={tiles} tileID={obj.id} tileContent={obj.content} setIsSaved={setIsSaved}
                                 values={values}
-
-                            // values={[
-                            //     { id: 0, typ: "", symbol: "v1", nazev: "Velký kulový", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                            //     { id: 1, typ: "", symbol: "v2", nazev: "Počáteční teplota", jednotka: "cm**2", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                            //     { id: 2, typ: "", symbol: "m", nazev: "Hmotnost", jednotka: "kg", values: [19.07, 19.87, 18.83, 18.04, 18.87,] },
-                            // ]}
-
                             />
                         }
                     })

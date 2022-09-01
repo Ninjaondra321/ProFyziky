@@ -50,7 +50,7 @@ function Data() {
             <h1>+ NEW</h1>
         </Link> */}
 
-        <div className="uk-child-width-1-3 uk-grid-match" uk-grid="" style={{ paddingBottom: "50px" }}>
+        <div className="uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-grid uk-grid-match" uk-grid="" style={{ paddingBottom: "50px" }}>
 
             <div >
                 <Link to={"/data/" + getNewID()} className="uk-card-body uk-card uk-card-primary uk-card-hover">

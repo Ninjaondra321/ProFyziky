@@ -1,20 +1,24 @@
+import { data } from "jquery";
 import { useState, useEffect } from "react";
 import { convertNode } from "react-pdf-html/dist/parse";
 
 import Spreadsheet from "react-spreadsheet";
 
 
-function Table({ values, setValues, setUpdateTiles, deleteTile, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
+function Table({ values, createData, setValues, setUpdateTiles, deleteTile, setTiles, tiles, tileContent, tileID, setFullscreenID, fullscreenID, setIsSaved }) {
 
     const [updateTable, setUpdateTable] = useState(Math.random());
 
     const [title, setTitle] = useState();
     const [tableValues, setTableValues] = useState();
 
+    const [htmlData, sethtmlData] = useState('<p>Hello World</p>');
+
     useEffect(() => {
         if (tileContent) {
             setTitle(tileContent.title)
             setTableValues(tileContent.tableValues)
+            sethtmlData(tileContent.data)
         } else {
             setTitle("Tabulka")
             setTableValues([])
@@ -31,17 +35,17 @@ function Table({ values, setValues, setUpdateTiles, deleteTile, setTiles, tiles,
             if (tilesCopy[i].id == tileID) {
                 tilesCopy[i].content = {
                     title: title,
-                    tableValues: tableValues
+                    tableValues: tableValues,
+                    // data: htmlData,
                 }
+                tilesCopy[i].data = htmlData
+
                 setTiles(tilesCopy)
                 break
             }
         }
 
-    }, [title, tableValues]);
-
-
-
+    }, [title, tableValues, htmlData]);
 
 
     function changeTableValues(id, valueee) {
@@ -237,13 +241,10 @@ function Table({ values, setValues, setUpdateTiles, deleteTile, setTiles, tiles,
             `
 
         console.log(output)
-        navigator.clipboard.writeText(output)
-        navigator.clipboard.writeText(output)
+        // navigator.clipboard.writeText(output)
+        // navigator.clipboard.writeText(output)
+        return output
     }
-
-
-
-
 
 
     function changeFocus(idAfter, uprava) {
@@ -261,6 +262,15 @@ function Table({ values, setValues, setUpdateTiles, deleteTile, setTiles, tiles,
             }
         }
     }
+
+    useEffect(() => {
+        setTimeout(() => {
+
+            console.log("Creating html table + saving?")
+            sethtmlData(createHTMLtable())
+        }, 1);
+
+    }, [createData]);
 
 
 

@@ -11784,7 +11784,7 @@ animation-fill-mode: both;
         flex-wrap: nowrap !important;
         flex-direction: row !important;
 
-        position: fixed;
+        position: fixed !important;
         left: 0;
         bottom: 0;
         right: 0;
