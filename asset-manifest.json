@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ProFyziky/static/css/main.35f9efff.css",
-    "main.js": "/ProFyziky/static/js/main.8d50c8ed.js",
+    "main.css": "/ProFyziky/static/css/main.8fde6b24.css",
+    "main.js": "/ProFyziky/static/js/main.ab66df3d.js",
     "static/js/787.91bd4ed1.chunk.js": "/ProFyziky/static/js/787.91bd4ed1.chunk.js",
     "static/media/Symbola.svg": "/ProFyziky/static/media/Symbola.191c327f0aef5505dabc.svg",
     "static/media/Symbola.otf": "/ProFyziky/static/media/Symbola.b0c85dd4bda9eef9f78a.otf",
@@ -9,10 +9,12 @@
     "static/media/Symbola.ttf": "/ProFyziky/static/media/Symbola.9ab231eefb8c56f6ef5d.ttf",
     "static/media/Symbola.woff": "/ProFyziky/static/media/Symbola.c2f28720e1e7cecfecd4.woff",
     "static/media/Symbola.woff2": "/ProFyziky/static/media/Symbola.52e7ce77729712a06423.woff2",
+    "static/media/Lora.ttf": "/ProFyziky/static/media/Lora.f07b670404a41430084a.ttf",
     "static/media/KaTeX_AMS-Regular.ttf": "/ProFyziky/static/media/KaTeX_AMS-Regular.853be92419a6c3766b9a.ttf",
     "service-worker.js": "/ProFyziky/service-worker.js",
     "static/media/KaTeX_Main-Regular.ttf": "/ProFyziky/static/media/KaTeX_Main-Regular.9eba1d77abcf2aa6e94e.ttf",
     "static/media/KaTeX_Main-Bold.ttf": "/ProFyziky/static/media/KaTeX_Main-Bold.8169508bf58f8bd92ad8.ttf",
+    "static/media/AlienFont.ttf": "/ProFyziky/static/media/AlienFont.91cd02c9cf3feee05711.ttf",
     "static/media/KaTeX_Main-Italic.ttf": "/ProFyziky/static/media/KaTeX_Main-Italic.fa675e5e4bec9eb250b6.ttf",
     "static/media/KaTeX_AMS-Regular.woff": "/ProFyziky/static/media/KaTeX_AMS-Regular.d562e886c52f12660a41.woff",
     "static/media/KaTeX_Main-BoldItalic.ttf": "/ProFyziky/static/media/KaTeX_Main-BoldItalic.828abcb200061cffbaae.ttf",
@@ -71,12 +73,12 @@
     "static/media/KaTeX_Size3-Regular.woff": "/ProFyziky/static/media/KaTeX_Size3-Regular.7947224e8a9914fa332b.woff",
     "static/media/KaTeX_Size3-Regular.woff2": "/ProFyziky/static/media/KaTeX_Size3-Regular.e1951519f6f0596f7356.woff2",
     "index.html": "/ProFyziky/index.html",
-    "main.35f9efff.css.map": "/ProFyziky/static/css/main.35f9efff.css.map",
-    "main.8d50c8ed.js.map": "/ProFyziky/static/js/main.8d50c8ed.js.map",
+    "main.8fde6b24.css.map": "/ProFyziky/static/css/main.8fde6b24.css.map",
+    "main.ab66df3d.js.map": "/ProFyziky/static/js/main.ab66df3d.js.map",
     "787.91bd4ed1.chunk.js.map": "/ProFyziky/static/js/787.91bd4ed1.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.35f9efff.css",
-    "static/js/main.8d50c8ed.js"
+    "static/css/main.8fde6b24.css",
+    "static/js/main.ab66df3d.js"
   ]
 }
