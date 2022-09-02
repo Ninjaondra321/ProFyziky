@@ -9,6 +9,8 @@ function Average({ values, createData, deleteTile, setTiles, tiles, tileContent,
 
     const [title, setTitle] = useState();
 
+    const [isOK, setIsOK] = useState(false);
+
     const [prvniRadek, setPrvniRadek] = useState();
     const [druhyRadek, setDruhyRadek] = useState();
     const [tretiRadek, setTretiRadek] = useState();
@@ -84,38 +86,48 @@ function Average({ values, createData, deleteTile, setTiles, tiles, tileContent,
 
 
     useEffect(() => {
-        for (let value of values) {
-            if (value.id == valueID) {
+        try {
 
-                console.log(value.values)
+            for (let value of values) {
+                if (value.id == valueID) {
 
-                let prumer = value.values.reduce((a, b) => a + b, 0) / value.values.length.toFixed(5)
-                let odchylka = getStandardDeviation(value.values).toFixed(5)
-
+                    console.log(value.values)
 
 
 
-                let vysledekZaokrouhleni = naJednoPlatne(odchylka)
-                let odchylkaZaokr = vysledekZaokrouhleni[0]
-                let prumerZaokr = zaokrouhli(prumer, vysledekZaokrouhleni[1], vysledekZaokrouhleni[2])
+                    let prumer = value.values.reduce((a, b) => a + b, 0) / value.values.length.toFixed(5)
+                    let odchylka = getStandardDeviation(value.values).toFixed(5)
 
 
 
 
+                    let vysledekZaokrouhleni = naJednoPlatne(odchylka)
+                    let odchylkaZaokr = vysledekZaokrouhleni[0]
+                    let prumerZaokr = zaokrouhli(prumer, vysledekZaokrouhleni[1], vysledekZaokrouhleni[2])
 
 
-                setHodnoty({
-                    symbol: value.symbol,
-                    jednotka: value.jednotka,
-                    prumer: prumer,
-                    prumerZaokrouhleno: prumerZaokr,
-                    odchylka: odchylka,
-                    odchylkaZaokrouhleno: odchylkaZaokr,
-                    toPosledniVProcentech: (odchylkaZaokr / prumerZaokr * 100).toFixed(2)
-                })
 
+
+
+
+                    setHodnoty({
+                        symbol: value.symbol,
+                        jednotka: value.jednotka,
+                        prumer: prumer,
+                        prumerZaokrouhleno: prumerZaokr,
+                        odchylka: odchylka,
+                        odchylkaZaokrouhleno: odchylkaZaokr,
+                        toPosledniVProcentech: (odchylkaZaokr / prumerZaokr * 100).toFixed(2)
+                    })
+                    setIsOK(true)
+
+
+                }
 
             }
+        } catch (e) {
+            console.log(e)
+            setIsOK(false)
         }
 
     }, [valueID]);
@@ -157,12 +169,13 @@ function Average({ values, createData, deleteTile, setTiles, tiles, tileContent,
             setDruhyRadek(`<p><span class="ql-formula" data-value="\\Delta ` + hodnoty.symbol + `\\ =\\ ` + hodnoty.odchylka + `\\ ` + hodnoty.jednotka + `\\ \\doteq\\ ` + hodnoty.odchylkaZaokrouhleno + `\\ ` + hodnoty.jednotka + `">﻿<span contenteditable="false"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi><mi>x</mi><mi>x</mi><mtext>&nbsp;</mtext><mo>=</mo><mtext>&nbsp;</mtext><mn>` + hodnoty.odchylka + `</mn><mtext>&nbsp;</mtext><mi>j</mi><mi>j</mi><mi>j</mi><mtext>&nbsp;</mtext><mo>≐</mo><mtext>&nbsp;</mtext><mn>` + hodnoty.odchylka + `</mn><mtext>&nbsp;</mtext><mi>j</mi><mi>j</mi><mi>j</mi></mrow><annotation encoding="application/x-tex">\\Delta ` + hodnoty.symbol + `\\ =\\ ` + hodnoty.odchylka + `\\ ` + hodnoty.jednotka + `\\ \\doteq\\ ` + hodnoty.odchylka + `\\ ` + hodnoty.jednotka + `</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.6833em;"></span><span class="mord">Δ</span><span class="mord mathnormal">` + hodnoty.symbol + `</span><span class="mspace">&nbsp;</span><span class="mspace" style="margin-right: 0.2778em;"></span><span class="mrel">=</span><span class="mspace">&nbsp;</span><span class="mspace" style="margin-right: 0.2778em;"></span></span><span class="base"><span class="strut" style="height: 0.8674em; vertical-align: -0.1944em;"></span><span class="mord">` + hodnoty.odchylka + `</span><span class="mspace">&nbsp;</span><span class="mord mathnormal" style="margin-right: 0.0572em;">` + hodnoty.jednotka + `</span><span class="mspace">&nbsp;</span><span class="mspace" style="margin-right: 0.2778em;"></span><span class="mrel">≐</span><span class="mspace">&nbsp;</span><span class="mspace" style="margin-right: 0.2778em;"></span></span><span class="base"><span class="strut" style="height: 0.854em; vertical-align: -0.1944em;"></span><span class="mord">` + hodnoty.odchylkaZaokrouhleno + `</span><span class="mspace">&nbsp;</span><span class="mord mathnormal" style="margin-right: 0.0572em;">` + hodnoty.jednotka + `</span></span></span></span></span>﻿</span> </p>`)
             setTretiRadek(`<p><span class="ql-formula" data-value="` + hodnoty.symbol + `\\ =\\ \\left(` + hodnoty.prumerZaokrouhleno + `\\ \\pm` + hodnoty.prumerZaokrouhleno + `\\right)` + hodnoty.jednotka + `">﻿<span contenteditable="false"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mi>x</mi><mi>x</mi><mtext>&nbsp;</mtext><mo>=</mo><mtext>&nbsp;</mtext><mrow><mo fence="true">(</mo><mn>` + hodnoty.prumerZaokrouhleno + `</mn><mtext>&nbsp;</mtext><mo>±</mo><mn>` + hodnoty.prumerZaokrouhleno + `</mn><mo fence="true">)</mo></mrow><mi>j</mi><mi>j</mi><mi>j</mi></mrow><annotation encoding="application/x-tex">` + hodnoty.symbol + `\\ =\\ \\left(` + hodnoty.prumerZaokrouhleno + `\\ \\pm` + hodnoty.prumerZaokrouhleno + `\\right)` + hodnoty.jednotka + `</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.4306em;"></span><span class="mord mathnormal">` + hodnoty.symbol + `</span><span class="mspace">&nbsp;</span><span class="mspace" style="margin-right: 0.2778em;"></span><span class="mrel">=</span><span class="mspace">&nbsp;</span><span class="mspace" style="margin-right: 0.2778em;"></span></span><span class="base"><span class="strut" style="height: 1em; vertical-align: -0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top: 0em;">(</span><span class="mord">` + hodnoty.prumerZaokrouhleno + `</span><span class="mspace">&nbsp;</span><span class="mspace" style="margin-right: 0.2222em;"></span><span class="mbin">±</span><span class="mspace" style="margin-right: 0.2222em;"></span><span class="mord">` + hodnoty.odchylkaZaokrouhleno + `</span><span class="mclose delimcenter" style="top: 0em;">)</span></span><span class="mspace" style="margin-right: 0.1667em;"></span><span class="mord mathnormal" style="margin-right: 0.0572em;">` + hodnoty.jednotka + `</span></span></span></span></span>﻿</span> </p>`)
             setCtvrtyRadek(`<p><span class="ql-formula" data-value="\\delta ` + hodnoty.symbol + `\\ =\\ ` + hodnoty.toPosledniVProcentech + `\\%">﻿<span contenteditable="false"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mi>x</mi><mi>x</mi><mi>x</mi><mtext>&nbsp;</mtext><mo>=</mo><mtext>&nbsp;</mtext><mn>` + hodnoty.toPosledniVProcentech + `</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">\\delta ` + hodnoty.symbol + `\\ =\\ ` + hodnoty.toPosledniVProcentech + `\\%</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.6944em;"></span><span class="mord mathnormal" style="margin-right: 0.0379em;">δ</span><span class="mord mathnormal">` + hodnoty.symbol + `</span><span class="mspace">&nbsp;</span><span class="mspace" style="margin-right: 0.2778em;"></span><span class="mrel">=</span><span class="mspace">&nbsp;</span><span class="mspace" style="margin-right: 0.2778em;"></span></span><span class="base"><span class="strut" style="height: 0.8056em; vertical-align: -0.0556em;"></span><span class="mord">` + hodnoty.toPosledniVProcentech + `%</span></span></span></span></span>﻿</span> </p>`)
-
-
-
+            setIsOK(true)
+        } else {
+            setIsOK(false)
         }
     }, [hodnoty]);
 
+    console.log(hodnoty);
 
 
 
@@ -215,10 +228,16 @@ function Average({ values, createData, deleteTile, setTiles, tiles, tileContent,
             <hr style={{ marginTop: 0 }} />
             <div className="uk-card-body">
 
-                <div dangerouslySetInnerHTML={{ __html: prvniRadek }}></div>
-                <div dangerouslySetInnerHTML={{ __html: druhyRadek }}></div>
-                <div dangerouslySetInnerHTML={{ __html: tretiRadek }}></div>
-                <div dangerouslySetInnerHTML={{ __html: ctvrtyRadek }}></div>
+                {isOK &&
+                    <>
+                        <div dangerouslySetInnerHTML={{ __html: prvniRadek }}></div>
+                        <div dangerouslySetInnerHTML={{ __html: druhyRadek }}></div>
+                        <div dangerouslySetInnerHTML={{ __html: tretiRadek }}></div>
+                        <div dangerouslySetInnerHTML={{ __html: ctvrtyRadek }}></div>
+                    </>
+                }
+                {!isOK &&
+                    <p>Nejsou dostupné data</p>}
 
             </div>
 
