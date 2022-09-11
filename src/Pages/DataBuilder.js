@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { Helmet } from "react-helmet";
+
 import Table from "../Components/DataComponents/Table";
 import Graph from "../Components/DataComponents/Grapg";
 import Average from "../Components/DataComponents/Average";
@@ -19,6 +21,9 @@ function DataBuilder() {
     const [refresh, setRefresh] = useState();
 
     const [updateTiles, setUpdateTiles] = useState(Math.random());
+
+    const [createData, setCreateData] = useState(Math.random());
+
 
 
 
@@ -69,8 +74,6 @@ function DataBuilder() {
         }
     }
 
-
-
     function save() {
         setCreateData(Math.random())
 
@@ -94,19 +97,6 @@ function DataBuilder() {
         }, 50)
     }
 
-
-    // function editTiles(tileID, value) {
-    //     let tilesCopy = tiles
-
-    //     for (let i = 0; i < tilesCopy.length; i++) {
-    //         if (tilesCopy[i].id == tileID) {
-    //             tilesCopy[i] = value
-    //             setTiles(tilesCopy)
-    //         }
-    //     }
-
-    // }
-
     function getNewValueID() {
         let valuesCopy = values
         let listOfIDs = []
@@ -128,6 +118,8 @@ function DataBuilder() {
     }
 
     function changeVaules(id, typee, value) {
+        console.log(id, typee, value)
+
         let valuesCopy = values
         for (let i = 0; i < valuesCopy.length; i++) {
             if (valuesCopy[i].id == id) {
@@ -136,18 +128,18 @@ function DataBuilder() {
                 console.debug(typee)
                 console.debug(value)
 
-                if (typee == "typ") {
-                    if (value == "tabulka") {
-                        valuesCopy[i].value = []
-                    }
-                    if (value == "konstanta") {
-                        valuesCopy[i].value = 0
-                    }
-                    if (value == "vzorec") {
-                        valuesCopy[i].value = ""
-                    }
+                // if (typee == "typ") {
+                //     if (value == "tabulka") {
+                //         valuesCopy[i].value = []
+                //     }
+                //     if (value == "konstanta") {
+                //         valuesCopy[i].value = 0
+                //     }
+                //     if (value == "vzorec") {
+                //         valuesCopy[i].value = ""
+                //     }
 
-                }
+                // }
 
 
 
@@ -195,10 +187,18 @@ function DataBuilder() {
             valueValues.push(0)
         }
 
-        setValues([...values, { id: getNewValueID(), symbol: "", nazev: "", jednotka: "", typ: "", values: valueValues }])
+        setValues([...values, { id: getNewValueID(), symbol: "", nazev: "", jednotka: "", typ: "", values: valueValues, value: "", vzorec: [] }])
     }
 
-    const [createData, setCreateData] = useState(Math.random());
+    const [equationEditorIsOpen, setEquationEditorIsOpen] = useState(false);
+
+    function openEquationEditor(valueID) {
+
+        setEquationEditorIsOpen(true)
+    }
+
+
+
 
 
 
@@ -318,7 +318,10 @@ function DataBuilder() {
                                             <input type="number" className="uk-input uk-width-1-2" placeholder="9,8" value={obj.values} onChange={e => changeVaules(obj.id, "values", e.target.value)} />
                                         }
                                         {obj.typ == "vzorec" &&
-                                            <input type="text" className="uk-input uk-width-1-2" placeholder="c" />
+                                            <>
+                                                <button onMouseEnter={() => console.log(obj.vzorec)} onClick={() => setEquationEditorIsOpen(obj.id)}>{obj.vzorec ? "Klikni sem" : obj.vzorec}</button>
+                                                {/* <input className="uk-input uk-width-1-2" placeholder="Klikni tu" value={""} onClick={() => console.log('Kliknuto')} /> */}
+                                            </>
                                         }
 
                                     </td>
@@ -440,8 +443,49 @@ function DataBuilder() {
             <div className="moje-fulscreen-tile-bg" onClick={() => setFullscreenID(false)} ></div>
         }
 
+        {
+            (typeof equationEditorIsOpen != "boolean") &&
+            <>
+                <div className="moje-fulscreen-tile">
+                    <div className="">
+                        <input type="text" className="uk-input uk-form-large" value={values[equationEditorIsOpen].vzorec} readOnly />
+                    </div>
+                    <div>
+                        {
+                            values.map((obj) => {
+                                console.log(obj)
+                                if (obj.id != equationEditorIsOpen) {
+                                    return <button className="uk-button uk-button-default" onClick={() => changeVaules(equationEditorIsOpen, "vzorec", [...values[equationEditorIsOpen].vzorec, obj.symbol])}>{obj.symbol}</button>
+                                }
 
-        <div className="uk-padding-large"></div>
+                            })
+                        }
+                        {
+                            ["+", "-", "*", "/"].map((obj) =>
+                                <button className="uk-button uk-button-default" onClick={() => changeVaules(equationEditorIsOpen, "vzorec", [...values[equationEditorIsOpen].vzorec, obj])}>{obj}</button>
+                            )
+                        }
+                        <button className="uk-button uk-button-default" onClick={() => console.log('asd')}>{"<--"}</button>
+                    </div>
+                </div>
+                <div className="moje-fulscreen-tile-bg" onClick={() => setEquationEditorIsOpen(false)}></div>
+            </>
+        }
+
+
+        <div className="uk-padding-large" ></div>
+
+        <Helmet>
+            <meta name="robots" content="noindex, nofollow" />
+            {
+                fileName &&
+                <title>ProFyziky | {fileName}</title>
+            }
+            {
+                !fileName &&
+                <title>ProFyziky | Editor dat</title>
+            }
+        </Helmet>
     </div>);
 }
 

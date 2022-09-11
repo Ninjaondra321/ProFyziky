@@ -1214,11 +1214,19 @@ function ProtocolBuilder() {
         </div >
         {/* END Workspace */}
 
-        {/* 
-        <Helmet>
-            <title>ProFyziky | {fileName}</title>
-        </Helmet> */}
 
+
+
+
+        <Helmet>
+            {nadpis &&
+                <title>ProFyziky | {nadpis}</title>
+            }
+            {!nadpis &&
+                <title>ProFyziky | Editor protokolů</title>
+            }
+            <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
 
     </div >);
 }

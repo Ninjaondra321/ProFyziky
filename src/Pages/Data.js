@@ -77,7 +77,8 @@ function Data() {
 
         <Helmet>
             <title>ProFyziky | Data</title>
-
+            <meta name="title" content="ProFyziky | Data" />
+            <meta name="description" content="Vytvářejte grafy, tabulky, průměry hodnot ZDARMA! Nevyžaduje přihlášení ani placení. Funguje i na mobilních zařízeních a tabletech!" />
         </Helmet>
 
     </div>);

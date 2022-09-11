@@ -91,6 +91,8 @@ function Circuits() {
 
             <Helmet>
                 <title>ProFyziky | El. shchémata</title>
+                <meta name="title" content="ProFyziky | El. shchémata" />
+                <meta name="description" content="Navrhujte elektrické obvody jednoduše, rychle a ZDARMA! Nevyžaduje přihlášení ani placení. Funguje i na mobilních zařízeních a tabletech!" />
             </Helmet>
 
 

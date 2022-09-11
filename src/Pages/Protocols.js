@@ -228,6 +228,9 @@ function Protocols() {
 
         <Helmet>
             <title>ProFyziky | Protokoy</title>
+            <meta name="title" content="ProFyziky | Protokoy" />
+            <meta name="description" content="Vytvářejte protokoly jednoduše, rychle a ZDARMA! Nevyžaduje přihlášení ani placení. Funguje i na mobilních zařízeních a tabletech!" />
+
         </Helmet>
 
 

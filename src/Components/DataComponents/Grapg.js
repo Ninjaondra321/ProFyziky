@@ -148,7 +148,7 @@ function Graph({ values, deleteTile, createData, setTiles, tiles, tileContent, t
     useEffect(() => {
         setTimeout(() => {
             sethtmlData(plot.current.el.children[0].children[0].children[0].outerHTML)
-        }, 50);
+        }, 5);
     }, [createData]);
 
 

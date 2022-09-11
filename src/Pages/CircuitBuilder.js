@@ -2,6 +2,8 @@ import { useParams, useNavigate, } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Stage, Layer, Rect, Text, Circle, Line, Image } from 'react-konva';
 
+import { Helmet } from "react-helmet";
+
 import useImage from 'use-image';
 
 import sourceImg from "../Imgs/ElComponents/source.png"
@@ -583,6 +585,11 @@ function CircuitBuilder() {
         </div>
         {/* END Konva Canvas */}
 
+        <Helmet>
+            <meta name="robots" content="noindex, nofollow" />
+            {Title && <title>ProFyziky | {Title}</title>}
+            {!Title && <title>ProFyziky | Editor el. schémat</title>}
+        </Helmet>
 
     </div >);
 }
